@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PrivacyCo — AI-Agent Powered Privacy Operations</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0f1c2e;
+  --navy2: #1a2d45;
+  --navy3: #243d5c;
+  --blue: #1a56db;
+  --blue-light: #e8f0fe;
+  --blue-mid: #b3ccfc;
+  --text: #0f1c2e;
+  --text2: #4a5568;
+  --text3: #94a3b8;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --bg: #ffffff;
+  --bg2: #f8fafc;
+  --bg3: #f1f5f9;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --red-border: #fecaca;
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+  --amber-border: #fde68a;
+  --green: #059669;
+  --green-bg: #ecfdf5;
+  --green-border: #a7f3d0;
+  --purple: #7c3aed;
+  --purple-bg: #f5f3ff;
+  --sans: 'Inter', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+nav {
+  background: var(--navy);
+  padding: 0 1.25rem;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgba(34,197,94,0.4);
+  animation: livepulse 2s ease-in-out infinite;
+}
+@keyframes livepulse {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+.nav-brand { font-size: 13px; font-weight: 600; color: #fff; letter-spacing: .04em; }
+.nav-tag { font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border-radius: 3px; padding: 2px 7px; font-family: var(--mono); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy2) 60%, #1e3a5f 100%);
+  padding: 2.5rem 1.25rem 2rem;
+  color: #fff;
+}
+.hero-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: #93c5fd; }
+.hero-title {
+  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: .5rem;
+}
+.hero-title span { color: #93c5fd; }
+.hero-author {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 1.75rem;
+  font-weight: 400;
+}
+.hero-author strong { color: rgba(255,255,255,0.8); font-weight: 500; }
+
+/* ── EXEC SUMMARY PARAS ── */
+.exec-para {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 1rem 1.125rem;
+  margin-bottom: .75rem;
+}
+.exec-para-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  margin-bottom: .5rem;
+}
+.exec-para p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.7;
+}
+.exec-para p strong { color: #fff; font-weight: 600; }
+.kw {
+  display: inline-block;
+  background: rgba(147,197,253,0.15);
+  border: 1px solid rgba(147,197,253,0.3);
+  color: #bfdbfe;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 500;
+  margin: 1px 1px;
+  white-space: nowrap;
+}
+.scope-list {
+  margin-top: .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.scope-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.5;
+}
+.scope-item::before {
+  content: '→';
+  color: #93c5fd;
+  font-size: 11px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+/* ── HERO STATS ── */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 1.25rem;
+}
+.hstat {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: .75rem .5rem;
+  text-align: center;
+}
+.hstat-n { font-size: 1.6rem; font-weight: 700; line-height: 1; color: #fff; }
+.hstat-n.red { color: #fca5a5; }
+.hstat-n.green { color: #86efac; }
+.hstat-n.amber { color: #fcd34d; }
+.hstat-l { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 4px; line-height: 1.3; }
+
+/* ── DISCLAIMER STRIP ── */
+.disclaimer {
+  background: #fffbeb;
+  border-bottom: 1px solid #fde68a;
+  padding: .6rem 1.25rem;
+  font-size: 11px;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+}
+.disclaimer::before { content: '⚠'; font-size: 12px; }
+
+/* ── MAIN CONTENT ── */
+main { padding: 1.5rem 1.25rem; max-width: 680px; margin: 0 auto; }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── ARCH ── */
+.arch {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1.5rem;
+}
+.arch-tier { margin-bottom: .75rem; }
+.arch-tier-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text3);
+  text-align: center;
+  margin-bottom: 5px;
+}
+.arch-boxes {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.abox {
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  flex: 1;
+  min-width: 90px;
+  max-width: 160px;
+}
+.abox sub { display: block; font-size: 9px; font-weight: 400; opacity: .7; margin-top: 2px; }
+.abox.blue { background: var(--blue-light); border: 1px solid var(--blue-mid); color: #1e40af; }
+.abox.navy { background: #e8edf5; border: 1px solid #b0bdd6; color: var(--navy); }
+.abox.green { background: var(--green-bg); border: 1px solid var(--green-border); color: #065f46; }
+.abox.amber { background: var(--amber-bg); border: 1px solid var(--amber-border); color: #92400e; }
+.abox.purple { background: var(--purple-bg); border: 1px solid #ddd6fe; color: #5b21b6; }
+.arch-divider {
+  width: 1px; height: 18px;
+  background: var(--border2);
+  margin: 0 auto 4px;
+}
+.arch-arrow-label {
+  font-size: 9px;
+  text-align: center;
+  color: var(--text3);
+  margin-bottom: 4px;
+  font-family: var(--mono);
+}
+.arch-note {
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+  margin-top: .75rem;
+  line-height: 1.5;
+  padding-top: .75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ── GUARDRAILS ── */
+.guardrails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.guardrail {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.guardrail-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.guardrail-title::before { content: '✓'; }
+.guardrail-body { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+/* ── SCENARIOS ── */
+.scenario {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: .75rem;
+}
+.scenario-hdr {
+  padding: 1rem 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  background: var(--bg);
+  transition: background .15s;
+}
+.scenario-hdr:active { background: var(--bg2); }
+.snum {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  font-family: var(--mono);
+  flex-shrink: 0;
+}
+.s1 .snum { background: var(--blue-light); color: var(--blue); }
+.s2 .snum { background: var(--green-bg); color: var(--green); }
+.s3 .snum { background: var(--amber-bg); color: var(--amber); }
+.s4 .snum { background: var(--purple-bg); color: var(--purple); }
+.smeta { flex: 1; min-width: 0; }
+.stitle { font-size: 13px; font-weight: 600; color: var(--text); }
+.ssub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.stoggle {
+  font-size: 14px;
+  color: var(--text3);
+  transition: transform .25s;
+  flex-shrink: 0;
+}
+.scenario.open .stoggle { transform: rotate(180deg); }
+.scenario-body {
+  display: none;
+  padding: 0 1.125rem 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.scenario.open .scenario-body { display: block; }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; gap: 0; padding-top: 1rem; }
+.step { display: flex; gap: 10px; }
+.step-line { display: flex; flex-direction: column; align-items: center; }
+.sdot {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700;
+  font-family: var(--mono);
+  color: var(--text3);
+  flex-shrink: 0;
+  background: var(--bg);
+}
+.sdot.done { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.sconn { width: 1px; flex: 1; background: var(--border); margin: 3px 0; min-height: 16px; }
+.scontent { flex: 1; padding-bottom: .875rem; }
+.steptitle { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.stepdesc { font-size: 11px; color: var(--text2); line-height: 1.6; }
+
+/* ── FINDINGS ── */
+.findings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin: .75rem 0;
+}
+.finding {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 11px;
+}
+.finding.crit { border-left: 3px solid var(--red); }
+.finding.high { border-left: 3px solid var(--amber); }
+.finding.ok { border-left: 3px solid var(--green); }
+.finding.info { border-left: 3px solid var(--blue); }
+.finding-label { font-size: 9px; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: 4px; }
+.finding-value { font-size: 1.5rem; font-weight: 700; line-height: 1; color: var(--text); }
+.finding-value.red { color: var(--red); }
+.finding-value.amber { color: var(--amber); }
+.finding-value.green { color: var(--green); }
+.finding-value.blue { color: var(--blue); }
+.finding-detail { font-size: 10px; color: var(--text2); margin-top: 3px; line-height: 1.4; }
+
+/* ── ANOMALY ── */
+.anomaly {
+  background: var(--red-bg);
+  border: 1px solid var(--red-border);
+  border-radius: 8px;
+  padding: 11px 13px;
+  margin: .75rem 0;
+}
+.anomaly-title { font-size: 12px; font-weight: 700; color: var(--red); margin-bottom: 4px; }
+.anomaly-body { font-size: 11px; color: #7f1d1d; line-height: 1.65; }
+.anomaly-body code { font-family: var(--mono); background: #fecaca; padding: 1px 4px; border-radius: 3px; font-size: 10px; }
+
+/* ── TABLE ── */
+.dtable-wrap { overflow-x: auto; margin: .75rem 0; border-radius: 7px; border: 1px solid var(--border); }
+.dtable { width: 100%; border-collapse: collapse; font-size: 11px; }
+.dtable th { text-align: left; padding: 7px 9px; background: var(--bg3); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+.dtable td { padding: 7px 9px; border-top: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+.dtable tr.alert td { background: #fff5f5; }
+.dtable tr.warn td { background: #fffdf0; }
+.mono { font-family: var(--mono); font-size: 10px; }
+
+/* ── BADGES ── */
+.bdg {
+  display: inline-block;
+  font-size: 9px; font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+.bdg.red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.bdg.amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.bdg.green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.bdg.blue { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-mid); }
+.bdg.gray { background: var(--bg3); color: var(--text2); border: 1px solid var(--border2); }
+.bdg.purple { background: var(--purple-bg); color: var(--purple); border: 1px solid #ddd6fe; }
+
+/* ── AUDIT ENTRY ── */
+.audit-entry {
+  background: var(--bg2);
+  border-left: 3px solid var(--border2);
+  padding: 8px 11px;
+  margin: 5px 0;
+  border-radius: 0 6px 6px 0;
+}
+.audit-time { font-size: 9px; font-family: var(--mono); color: var(--text3); margin-bottom: 2px; }
+.audit-action { font-size: 11px; color: var(--text); font-weight: 500; margin-bottom: 2px; }
+.audit-guard { font-size: 10px; color: var(--green); }
+.audit-human { font-size: 10px; color: var(--amber); }
+
+/* ── INTEL BOX ── */
+.intel {
+  background: var(--purple-bg);
+  border: 1px solid #ddd6fe;
+  border-radius: 8px;
+  padding: 11px 13px;
+  margin: .75rem 0;
+}
+.intel-title { font-size: 11px; font-weight: 700; color: var(--purple); margin-bottom: 5px; }
+.intel-body { font-size: 11px; color: #4c1d95; line-height: 1.65; }
+.intel-body strong { color: var(--purple); }
+
+/* ── REG PILLS ── */
+.reg-pills { display: flex; flex-wrap: wrap; gap: 5px; margin: .75rem 0; }
+.reg-pill {
+  font-size: 10px;
+  font-family: var(--mono);
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  padding: 3px 8px;
+  color: var(--text2);
+}
+
+/* ── METRICS ── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin: .75rem 0;
+}
+.mcard {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.mcard-n { font-size: 1.5rem; font-weight: 700; color: var(--text); line-height: 1; }
+.mcard-n.red { color: var(--red); }
+.mcard-n.green { color: var(--green); }
+.mcard-n.blue { color: var(--blue); }
+.mcard-n.amber { color: var(--amber); }
+.mcard-n.purple { color: var(--purple); }
+.mcard-l { font-size: 9px; color: var(--text3); margin-top: 4px; text-transform: uppercase; letter-spacing: .05em; line-height: 1.3; }
+
+/* ── PROPOSITION ── */
+.proposition {
+  background: var(--navy);
+  border-radius: 12px;
+  padding: 1.75rem 1.25rem;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.prop-title { font-size: 1.1rem; font-weight: 300; color: #fff; line-height: 1.4; margin-bottom: .875rem; }
+.prop-title strong { font-weight: 700; color: #93c5fd; }
+.prop-body { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.75; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--bg3);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  font-size: 10px;
+  color: var(--text3);
+  font-family: var(--mono);
+  line-height: 1.8;
+}
+
+/* ── UTIL ── */
+.mt { margin-top: .75rem; }
+.divider { height: 1px; background: var(--border); margin: 1rem 0; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="live-dot"></div>
+    <span class="nav-brand">PrivacyCo — AI Privacy Operations</span>
+  </div>
+  <span class="nav-tag">POC</span>
+</nav>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">All data is synthetic and fictional — for demonstration purposes only</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Proof of Concept &nbsp;·&nbsp; June 2026</div>
+  <h1 class="hero-title">AI-Agent Powered Privacy Operations<br><span>with Information Governance Built In — For Dynamic Enterprise Environments</span></h1>
+  <div class="hero-author">Prepared by <strong>Abhishek Sinha</strong> &nbsp;·&nbsp; Data Governance, Privacy &amp; AI Convergence</div>
+
+  <!-- PARA 1: WHAT THIS IS -->
+  <div class="exec-para">
+    <div class="exec-para-label">What this is</div>
+    <p>This proof of concept demonstrates that an AI agent — connected to a privacy platform via the <strong>MCP (Model Context Protocol)</strong> standard — can continuously monitor, detect, analyse, and escalate <strong>data and</strong> privacy operations, with full <strong>data &amp; privacy governance guardrails</strong> and human oversight at every consequential step.</p>
+  </div>
+
+  <!-- PARA 2: WHY IT IS SAFE -->
+  <div class="exec-para">
+    <div class="exec-para-label">Governance Framework — Why Is It Safe to Deploy</div>
+    <p>The AI agent operates under a strict governance framework designed for enterprise privacy contexts. Every action is governed by <span class="kw">Privacy by Design</span> principles — meaning governance is built into the architecture, not added as an afterthought. A <span class="kw">human in the loop</span> checkpoint gates every consequential action: no email is sent, no data deleted, no calendar entry created without explicit human approval. The agent applies <span class="kw">data minimisation</span> at every step — reading only what is necessary and retaining no raw personal data values. Every action is recorded in a <span class="kw">full audit trail</span> with timestamp, access scope, and guardrail applied. <span class="kw">Purpose limitation</span> confines the agent strictly to privacy operations — it cannot act outside its defined scope. The result: AI that is not just capable, but <strong>accountable and auditable</strong>.</p>
+  </div>
+
+  <!-- PARA 3: SCOPE -->
+  <div class="exec-para">
+    <div class="exec-para-label">What Is Demonstrated</div>
+    <div class="scope-list">
+      <div class="scope-item"><strong>Source systems scanned:</strong>&nbsp; Salesforce CRM, Workday HR, Oracle HCM — 32 personal data fields classified across basic, sensitive, and special category tiers.</div>
+      <div class="scope-item"><strong>Scenario 1 — Personal data discovery:</strong>&nbsp; Agent detected health data (special category) sitting in a CRM system where it should not be. Regulatory obligations under APP 3, GDPR Art.9, and the NDB scheme were identified. No data deleted without human approval.</div>
+      <div class="scope-item"><strong>Scenario 2 — DSR management:</strong>&nbsp; Agent identified 3 overdue data subject requests — one 26 days past deadline — drafted an escalation and waited for human approval before sending.</div>
+      <div class="scope-item"><strong>Scenario 3 — Risk monitoring:</strong>&nbsp; Agent scored and prioritised 8 open privacy risks, producing a DPO briefing with regulatory references and recommended actions. No risk records were modified.</div>
+      <div class="scope-item"><strong>Scenario 4 — Assessment deadlines:</strong>&nbsp; Agent tracked 6 DPIAs, detected a workload conflict and a cross-register dependency chain that no single human scanning separate spreadsheets would reliably notice.</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n red">1</div><div class="hstat-l">Critical anomaly detected</div></div>
+    <div class="hstat"><div class="hstat-n red">3</div><div class="hstat-l">Overdue DSRs escalated</div></div>
+    <div class="hstat"><div class="hstat-n amber">8</div><div class="hstat-l">Risks prioritised</div></div>
+    <div class="hstat"><div class="hstat-n">17</div><div class="hstat-l">Actions fully audited</div></div>
+    <div class="hstat"><div class="hstat-n green">0</div><div class="hstat-l">Raw personal data exposed</div></div>
+    <div class="hstat"><div class="hstat-n green">0</div><div class="hstat-l">Autonomous irreversible actions</div></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- ARCHITECTURE -->
+  <div class="section-label">Technology architecture</div>
+  <div class="arch">
+    <div class="arch-tier">
+      <div class="arch-tier-label">AI agent</div>
+      <div class="arch-boxes"><div class="abox blue">Claude AI Agent<sub>Anthropic — claude-sonnet</sub></div></div>
+    </div>
+    <div class="arch-divider"></div>
+    <div class="arch-arrow-label">↕ MCP Protocol — open standard, Linux Foundation</div>
+    <div class="arch-divider"></div>
+    <div class="arch-tier">
+      <div class="arch-tier-label">Privacy platform (simulated via Google Drive)</div>
+      <div class="arch-boxes">
+        <div class="abox green">DSR Register</div>
+        <div class="abox green">Risk Register</div>
+        <div class="abox green">DPIA Schedule</div>
+        <div class="abox green">Audit Log</div>
+      </div>
+    </div>
+    <div class="arch-divider"></div>
+    <div class="arch-arrow-label">↕ Platform connectors (built by privacy platform — not MCP)</div>
+    <div class="arch-divider"></div>
+    <div class="arch-tier">
+      <div class="arch-tier-label">Source systems</div>
+      <div class="arch-boxes">
+        <div class="abox amber">Salesforce CRM</div>
+        <div class="abox amber">Workday HR</div>
+        <div class="abox amber">Oracle HCM</div>
+      </div>
+    </div>
+    <div class="arch-note">MCP connects AI agent ↔ privacy platform only. Source system connectors remain the privacy platform's engineering responsibility. DataGrail shipped the first production privacy MCP server in March 2026.</div>
+  </div>
+
+  <!-- GUARDRAILS -->
+  <div class="section-label">Governance guardrails</div>
+  <div class="guardrails">
+    <div class="guardrail"><div class="guardrail-title">Privacy by design</div><div class="guardrail-body">Governance built into the agent architecture — not added after.</div></div>
+    <div class="guardrail"><div class="guardrail-title">Human in the loop</div><div class="guardrail-body">No irreversible action without explicit human approval.</div></div>
+    <div class="guardrail"><div class="guardrail-title">Data minimisation</div><div class="guardrail-body">Agent reads only what each task requires. No raw personal data retained.</div></div>
+    <div class="guardrail"><div class="guardrail-title">Full audit trail</div><div class="guardrail-body">Every action logged: what, why, which guardrail applied.</div></div>
+    <div class="guardrail"><div class="guardrail-title">Purpose limitation</div><div class="guardrail-body">Agent operates within privacy operations scope only.</div></div>
+    <div class="guardrail"><div class="guardrail-title">Transparency</div><div class="guardrail-body">Agent declares its own access scope in every output.</div></div>
+  </div>
+
+  <!-- SCENARIOS -->
+  <div class="section-label">The four scenarios</div>
+
+  <!-- S1 -->
+  <div class="scenario s1 open" id="s1">
+    <div class="scenario-hdr" onclick="tog('s1')">
+      <div class="snum">01</div>
+      <div class="smeta">
+        <div class="stitle">Personal data discovery</div>
+        <div class="ssub">Scan · classify · detect anomalies · report</div>
+      </div>
+      <div class="stoggle">▾</div>
+    </div>
+    <div class="scenario-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-line"><div class="sdot done">1</div><div class="sconn"></div></div>
+          <div class="scontent">
+            <div class="steptitle">Agent scans three source system exports</div>
+            <div class="stepdesc">Reads Salesforce CRM, Workday HR, and Oracle HCM files. Field names and structure only — no raw personal data values retained in memory at any point.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line"><div class="sdot done">2</div><div class="sconn"></div></div>
+          <div class="scontent">
+            <div class="steptitle">Classifies 32 personal data fields</div>
+            <div class="findings">
+              <div class="finding ok"><div class="finding-label">Basic personal data</div><div class="finding-value blue">12</div><div class="finding-detail">Name, email, phone, address, account type</div></div>
+              <div class="finding high"><div class="finding-label">Sensitive personal data</div><div class="finding-value amber">16</div><div class="finding-detail">TFN, DOB, salary, superannuation, nationality</div></div>
+              <div class="finding crit"><div class="finding-label">Special category</div><div class="finding-value red">4</div><div class="finding-detail">Health conditions — critical anomaly</div></div>
+              <div class="finding info"><div class="finding-label">Systems scanned</div><div class="finding-value blue">3</div><div class="finding-detail">CRM, HR, Payroll</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line"><div class="sdot done">3</div><div class="sconn"></div></div>
+          <div class="scontent">
+            <div class="steptitle">Critical anomaly detected</div>
+            <div class="anomaly">
+              <div class="anomaly-title">⚠ Health data found in CRM system</div>
+              <div class="anomaly-body">Field <code>health_condition</code> found in <code>salesforce_crm_export.csv</code>. Health data is special category personal data under APP 3 / GDPR Art.9. A CRM is not an appropriate system for this data. No consent or privacy notice covers this collection. Affects 4 of 10 records. Agent flagged for DPO review — <strong>did NOT delete data autonomously.</strong></div>
+            </div>
+            <div class="reg-pills">
+              <span class="reg-pill">APP 3</span><span class="reg-pill">APP 5</span><span class="reg-pill">APP 11</span><span class="reg-pill">GDPR Art.9</span><span class="reg-pill">GDPR Art.33 — 72hr clock</span><span class="reg-pill">NDB Scheme</span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line"><div class="sdot done">4</div></div>
+          <div class="scontent">
+            <div class="steptitle">Discovery report saved · audit log updated</div>
+            <div class="audit-entry">
+              <div class="audit-time">2026-06-10 00:11:00 AEST</div>
+              <div class="audit-action">Anomaly flagged — health_condition in salesforce_crm_export.csv</div>
+              <div class="audit-guard">✓ No irreversible action — DPO approval required before any deletion</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 -->
+  <div class="scenario s2" id="s2">
+    <div class="scenario-hdr" onclick="tog('s2')">
+      <div class="snum">02</div>
+      <div class="smeta">
+        <div class="stitle">DSR management</div>
+        <div class="ssub">Scan register · identify overdue · escalate with human approval</div>
+      </div>
+      <div class="stoggle">▾</div>
+    </div>
+    <div class="scenario-body">
+      <div class="findings">
+        <div class="finding crit"><div class="finding-label">Overdue DSRs</div><div class="finding-value red">3</div><div class="finding-detail">Active regulatory exposure — APP 12 / GDPR Art.12</div></div>
+        <div class="finding high"><div class="finding-label">Max days overdue</div><div class="finding-value amber">26</div><div class="finding-detail">DSR-009 — no action despite prior escalation</div></div>
+        <div class="finding ok"><div class="finding-label">In progress</div><div class="finding-value green">2</div><div class="finding-detail">DSR-003, DSR-004 on track</div></div>
+        <div class="finding info"><div class="finding-label">Open / unassigned</div><div class="finding-value blue">5</div><div class="finding-detail">DSR-005 through DSR-010</div></div>
+      </div>
+      <div class="dtable-wrap">
+        <table class="dtable">
+          <thead><tr><th>DSR ID</th><th>Type</th><th>Status</th><th>SLA</th></tr></thead>
+          <tbody>
+            <tr class="alert"><td class="mono">DSR-009</td><td>Deletion</td><td><span class="bdg red">Overdue</span></td><td style="color:var(--red);font-weight:600;">26 days over</td></tr>
+            <tr class="alert"><td class="mono">DSR-001</td><td>Deletion</td><td><span class="bdg red">Overdue</span></td><td style="color:var(--red);font-weight:600;">10 days over</td></tr>
+            <tr class="alert"><td class="mono">DSR-002</td><td>Access</td><td><span class="bdg red">Overdue</span></td><td style="color:var(--red);font-weight:600;">1 day over</td></tr>
+            <tr class="warn"><td class="mono">DSR-003</td><td>Correction</td><td><span class="bdg amber">In progress</span></td><td style="color:var(--amber);">9 days left</td></tr>
+            <tr><td class="mono">DSR-005–010</td><td>Various</td><td><span class="bdg gray">Open</span></td><td style="color:var(--green);">21–28 days</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="audit-entry">
+        <div class="audit-time">2026-06-10 00:22:00 AEST</div>
+        <div class="audit-action">Escalation email drafted — 3 overdue DSRs identified</div>
+        <div class="audit-human">⏸ Human approval checkpoint — email NOT sent until explicitly approved</div>
+      </div>
+      <div class="audit-entry">
+        <div class="audit-time">2026-06-10 00:25:00 AEST</div>
+        <div class="audit-action">Human reviewed and approved — email sent</div>
+        <div class="audit-guard">✓ Approval recorded in audit log with timestamp before action taken</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 -->
+  <div class="scenario s3" id="s3">
+    <div class="scenario-hdr" onclick="tog('s3')">
+      <div class="snum">03</div>
+      <div class="smeta">
+        <div class="stitle">Risk monitoring</div>
+        <div class="ssub">Score all risks · cross-reference findings · DPO briefing</div>
+      </div>
+      <div class="stoggle">▾</div>
+    </div>
+    <div class="scenario-body">
+      <div class="dtable-wrap mt">
+        <table class="dtable">
+          <thead><tr><th>Risk</th><th>Title</th><th>Severity</th><th>Score</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr class="alert"><td class="mono">RSK-001</td><td>Health data in CRM</td><td><span class="bdg red">Critical</span></td><td style="color:var(--red);font-weight:700;">15</td><td><span class="bdg red">Open</span></td></tr>
+            <tr class="alert"><td class="mono">RSK-002</td><td>Overdue DSRs</td><td><span class="bdg red">High</span></td><td style="color:var(--amber);font-weight:700;">12</td><td><span class="bdg red">Open</span></td></tr>
+            <tr class="alert"><td class="mono">RSK-004</td><td>No DPA with vendor</td><td><span class="bdg red">High</span></td><td style="color:var(--amber);font-weight:700;">12</td><td><span class="bdg red">Open</span></td></tr>
+            <tr class="warn"><td class="mono">RSK-008</td><td>No Japan TIA</td><td><span class="bdg amber">High</span></td><td style="color:var(--amber);font-weight:700;">10</td><td><span class="bdg red">Open</span></td></tr>
+            <tr><td class="mono">RSK-003</td><td>TFN retention</td><td><span class="bdg amber">High</span></td><td style="color:var(--amber);font-weight:700;">10</td><td><span class="bdg amber">In progress</span></td></tr>
+            <tr><td class="mono">RSK-005–007</td><td>Security / consent / notice</td><td><span class="bdg blue">Medium</span></td><td style="color:var(--blue);">8–9</td><td><span class="bdg gray">Mixed</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="audit-entry mt">
+        <div class="audit-time">2026-06-10 00:35:00 AEST</div>
+        <div class="audit-action">Cross-scenario: RSK-001 confirmed by Scenario 1 discovery scan</div>
+        <div class="audit-guard">✓ Risk register metadata only — no personal data accessed — no records modified</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4 -->
+  <div class="scenario s4" id="s4">
+    <div class="scenario-hdr" onclick="tog('s4')">
+      <div class="snum">04</div>
+      <div class="smeta">
+        <div class="stitle">Assessment deadline management</div>
+        <div class="ssub">DPIA tracking · cross-register intelligence · workload conflicts</div>
+      </div>
+      <div class="stoggle">▾</div>
+    </div>
+    <div class="scenario-body">
+      <div class="dtable-wrap mt">
+        <table class="dtable">
+          <thead><tr><th>DPIA</th><th>Title</th><th>Due</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr class="alert"><td class="mono">DPIA-003</td><td>Japan data transfer</td><td style="color:var(--red);font-weight:600;">Overdue</td><td><span class="bdg red">Blocked</span></td></tr>
+            <tr class="alert"><td class="mono">DPIA-001</td><td>Customer analytics</td><td style="color:var(--red);font-weight:600;">15 Jun</td><td><span class="bdg amber">In progress</span></td></tr>
+            <tr class="warn"><td class="mono">DPIA-002</td><td>Employee monitoring</td><td style="color:var(--amber);">20 Jun</td><td><span class="bdg amber">In progress</span></td></tr>
+            <tr><td class="mono">DPIA-004</td><td>Marketing platform</td><td>30 Jun</td><td><span class="bdg gray">Not started</span></td></tr>
+            <tr><td class="mono">DPIA-006</td><td>Consent banner</td><td>25 Jun</td><td><span class="bdg green">On track</span></td></tr>
+            <tr><td class="mono">DPIA-005</td><td>Annual review</td><td>31 Jul</td><td><span class="bdg gray">Not started</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="intel">
+        <div class="intel-title">Proactive intelligence — not explicitly requested</div>
+        <div class="intel-body">
+          <strong>Workload conflict:</strong> James Cooper owns both DPIA-001 (due in 5 days) and DPIA-005. Fatima Al-Rashid owns both DPIA-003 (overdue) and DPIA-002 (due in 10 days).<br><br>
+          <strong>Dependency chain:</strong> DPIA-004 cannot start until RSK-004 (missing vendor DPA) is resolved. These items exist in separate registers — the agent cross-referenced them automatically without being instructed to.
+        </div>
+      </div>
+      <div class="audit-entry">
+        <div class="audit-time">2026-06-10 01:05:00 AEST</div>
+        <div class="audit-action">Calendar reminders prepared for DPIA-001 and DPIA-003</div>
+        <div class="audit-human">⏸ Human approval checkpoint — no calendar entries created until explicitly approved</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="section-label" style="margin-top:2rem;">POC summary</div>
+  <div class="metrics">
+    <div class="mcard"><div class="mcard-n blue">3</div><div class="mcard-l">Systems scanned</div></div>
+    <div class="mcard"><div class="mcard-n">32</div><div class="mcard-l">Fields classified</div></div>
+    <div class="mcard"><div class="mcard-n red">1</div><div class="mcard-l">Critical anomaly</div></div>
+    <div class="mcard"><div class="mcard-n red">3</div><div class="mcard-l">Overdue DSRs</div></div>
+    <div class="mcard"><div class="mcard-n amber">8</div><div class="mcard-l">Risks scored</div></div>
+    <div class="mcard"><div class="mcard-n amber">6</div><div class="mcard-l">DPIAs tracked</div></div>
+    <div class="mcard"><div class="mcard-n purple">2</div><div class="mcard-l">Workload conflicts</div></div>
+    <div class="mcard"><div class="mcard-n purple">1</div><div class="mcard-l">Dependency chains</div></div>
+    <div class="mcard"><div class="mcard-n">17</div><div class="mcard-l">Actions audited</div></div>
+    <div class="mcard"><div class="mcard-n">3</div><div class="mcard-l">Human approvals</div></div>
+    <div class="mcard"><div class="mcard-n green">0</div><div class="mcard-l">Personal data exposed</div></div>
+    <div class="mcard"><div class="mcard-n green">0</div><div class="mcard-l">Autonomous actions</div></div>
+  </div>
+
+  <div class="section-label">Regulatory coverage</div>
+  <div class="reg-pills">
+    <span class="reg-pill">APP 3</span><span class="reg-pill">APP 5</span><span class="reg-pill">APP 6</span><span class="reg-pill">APP 8</span><span class="reg-pill">APP 11</span><span class="reg-pill">APP 12</span>
+    <span class="reg-pill">GDPR Art.9</span><span class="reg-pill">GDPR Art.12</span><span class="reg-pill">GDPR Art.13</span><span class="reg-pill">GDPR Art.28</span><span class="reg-pill">GDPR Art.33</span>
+    <span class="reg-pill">NDB Scheme</span><span class="reg-pill">Tax Admin Act 1953</span><span class="reg-pill">OAIC Consent Guidance</span>
+  </div>
+
+  <!-- PROPOSITION -->
+  <div class="proposition">
+    <div class="prop-title">The question is not whether this is <strong>technically possible.</strong><br>This POC proves it is.</div>
+    <div class="prop-body">The real question is whether your organisation has the governance framework to deploy AI in privacy operations responsibly. Privacy by Design is not a constraint on AI — it is what makes AI trustworthy enough to operationalise at scale. That is where the consulting value lies.</div>
+  </div>
+
+</main>
+
+<footer>
+  Prepared by Abhishek Sinha &nbsp;·&nbsp; Data Governance, Privacy &amp; AI Convergence<br>
+  Built with Claude (Anthropic) + MCP Protocol + Google Drive &nbsp;·&nbsp; June 2026<br>
+  All data is synthetic and fictional — no real personal data used at any point
+</footer>
+
+<script>
+function tog(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>
