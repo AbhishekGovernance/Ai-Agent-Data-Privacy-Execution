@@ -12,6 +12,13 @@ A live proof of concept demonstrating that an AI agent — connected to a privac
 
 This is not a slide deck concept. It is a working demonstration.
 
+## Live Demo
+
+- [Platform Architecture — 12-layer interactive stack](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/)
+- [Layer 1 — Data Discovery & Ingestion POC](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/layer1-data-discovery.html)
+
+Best viewed on mobile or desktop — no login required.
+Best viewed on mobile or desktop — no login required.
 ---
 
 ## What Is Demonstrated
