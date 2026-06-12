@@ -66,7 +66,17 @@ Every scenario demonstrates six guardrails simultaneously:
 
 ## Regulatory Coverage Demonstrated
 
-APP 3 · APP 5 · APP 6 · APP 8 · APP 11 · APP 12 · GDPR Art.9 · GDPR Art.12 · GDPR Art.13 · GDPR Art.28 · GDPR Art.33 · NDB Scheme · Tax Administration Act 1953 · OAIC Consent Guidance
+APP 3 · APP 5 · APP 6 · APP 8 · APP 11 · APP 12 · GDPR Art.9 · GDPR Art.12 · GDPR Art.13 · GDPR Art.28 · GDPR Art.33 · NDB Scheme · Tax Administration Act 1953 · 
+OAIC Consent Guidance
+## Repository Guide
+
+| File | What it is |
+|---|---|
+| `index.html` | The interactive 12-layer platform architecture (the live site's home page) |
+| `layer1-data-discovery.html` | Working POC of Layer 1 — AI agent discovering personal data across 4 systems |
+| `Demo_Data_AI_Agent_Convergence.html / .pptx` | Earlier concept demo (superseded by the layered POC) |
+
+As each platform layer is built, a new layer file is added here and linked in the Live Demo section above.
 
 ---
 
