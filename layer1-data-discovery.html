@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer 1 — Data Discovery & Ingestion | AI-Native Privacy Platform POC</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+.page{max-width:520px;margin:0 auto;padding-bottom:40px}
+
+.hd{background:#0f2044;padding:22px 18px 16px}
+.hd-badges{margin-bottom:8px}
+.badge{display:inline-block;background:rgba(29,143,110,0.25);color:#5dcaa5;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:0.5px solid rgba(93,202,165,0.3);margin-right:6px}
+.badge.blue{background:rgba(59,125,216,0.2);color:#7ab0e8;border-color:rgba(59,125,216,0.3)}
+.hd-title{font-size:18px;font-weight:600;color:#fff}
+.hd-sub{font-size:12px;color:#9aaac8;margin-top:4px;line-height:1.5}
+
+.toggle-wrap{display:flex;gap:6px;background:rgba(255,255,255,0.08);border-radius:9px;padding:4px;margin-top:14px}
+.toggle-btn{flex:1;border:none;border-radius:6px;padding:9px 10px;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#9aaac8;transition:all 0.15s}
+.toggle-btn.active{background:#fff;color:#0f2044}
+
+.view{display:none;padding:16px}
+.view.active{display:block}
+
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kpi{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:9px;padding:13px 14px}
+.kpi-val{font-size:25px;font-weight:600;color:#0f2044;line-height:1}
+.kpi-label{font-size:11px;color:#5f6b80;margin-top:5px;line-height:1.4}
+
+.finding{margin-top:10px;background:#fcebeb;border:0.5px solid #d96b6b;border-radius:10px;padding:13px 15px}
+.finding-head{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.finding-icon{font-size:15px}
+.finding-title{font-size:13px;font-weight:700;color:#791f1f}
+.finding-item{font-size:12.5px;color:#501313;line-height:1.6;padding:6px 0;border-top:0.5px solid rgba(162,45,45,0.15)}
+.finding-item:first-of-type{border-top:none;padding-top:0}
+.finding-num{font-weight:700}
+
+.sec{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8a96ab;padding:18px 0 8px}
+
+.sys{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 15px;margin-bottom:8px}
+.sys-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sys-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sys-name{font-size:14px;font-weight:600;color:#0f2044}
+.sys-desc{font-size:11px;color:#5f6b80;margin-top:1px}
+.sys-count{margin-left:auto;text-align:right;flex-shrink:0}
+.sys-count-num{font-size:18px;font-weight:600;color:#0f2044}
+.sys-count-label{font-size:10px;color:#8a96ab}
+.attr-group{margin-top:9px}
+.attr-label{font-size:10.5px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:11px;padding:3px 9px;border-radius:5px;font-weight:500}
+.ch-std{background:#e1f5ee;color:#0a6647}
+.ch-sen{background:#fff3e0;color:#8a5000}
+.ch-spc{background:#fcebeb;color:#791f1f}
+.lbl-std{color:#0a6647}.lbl-sen{color:#8a5000}.lbl-spc{color:#791f1f}
+
+.legend{display:flex;flex-direction:column;gap:7px;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 15px;background:#fff}
+.legend-row{display:flex;align-items:flex-start;gap:9px;font-size:11.5px;color:#5f6b80;line-height:1.5}
+.legend-row .dot{margin-top:4px}
+
+.assure{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:12px 14px;background:#eef8f4;border:0.5px solid #9dd4be;border-radius:9px}
+.assure-text{font-size:11.5px;color:#085041;line-height:1.6}
+
+/* Technical view */
+.agent-status{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.status-row{display:flex;align-items:flex-start;gap:10px}
+.status-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px;background:#b4b2a9}
+.status-dot.running{background:#1d9e75;animation:pulse 1.2s infinite}
+.status-dot.done{background:#1d9e75}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.status-label{font-size:13px;font-weight:600;color:#0f2044}
+.status-detail{font-size:11px;color:#5f6b80;margin-top:3px;line-height:1.5}
+.metrics-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.metric{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:8px;padding:10px 12px}
+.metric-label{font-size:10px;color:#8a96ab;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:600;color:#0f2044;line-height:1}
+.metric-sub{font-size:10.5px;color:#8a96ab;margin-top:3px}
+.source-card{background:#fff;border:0.5px solid rgba(15,32,68,0.12);border-radius:10px;padding:11px 13px;margin-bottom:8px;transition:border-color 0.15s,opacity 0.15s}
+.source-card.scanning{border-color:#1d9e75}
+.source-card.done{border-color:#1d9e75}
+.source-card.idle{opacity:0.6}
+.source-top{display:flex;align-items:center;gap:9px}
+.source-icon{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.source-name{font-size:12px;font-weight:600;color:#0f2044}
+.source-type{font-size:10.5px;color:#5f6b80}
+.source-stat{font-size:10.5px;color:#5f6b80;margin-left:auto;text-align:right;flex-shrink:0;line-height:1.4}
+.scan-bar-wrap{height:3px;background:rgba(15,32,68,0.1);border-radius:2px;margin-top:9px;overflow:hidden}
+.scan-bar{height:100%;border-radius:2px;background:#1d9e75;width:0}
+.anomaly-card{display:none;margin-top:10px;background:#fcebeb;border:0.5px solid #d96b6b;border-radius:10px;padding:13px 14px}
+.anomaly-card.show{display:block}
+.anomaly-title{font-size:12.5px;font-weight:700;color:#791f1f;margin-bottom:6px}
+.anomaly-body{font-size:12px;color:#501313;line-height:1.55}
+.anomaly-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.anomaly-tag{font-size:10px;background:rgba(162,45,45,0.12);color:#791f1f;padding:3px 7px;border-radius:4px;font-weight:700}
+.anomaly-action{margin-top:8px;padding-top:8px;border-top:0.5px solid rgba(162,45,45,0.25);font-size:11px;color:#791f1f;line-height:1.5}
+.feed-wrap{border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;overflow:hidden;background:#fff}
+.feed-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:0.5px solid rgba(15,32,68,0.07);font-size:12px}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.feed-dot.t3{background:#1d9e75}.feed-dot.t2{background:#e8b44a}.feed-dot.t1{background:#e24b4a}.feed-dot.info{background:#3b7dd8}.feed-dot.guard{background:#7f77dd}
+.feed-text{flex:1;color:#1a2a44;line-height:1.45}
+.feed-meta{font-size:10.5px;color:#8a96ab;margin-top:1px}
+.feed-time{font-size:10.5px;color:#8a96ab;white-space:nowrap;flex-shrink:0}
+.tier-wrap{border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;overflow:hidden}
+.tier-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:0.5px solid rgba(15,32,68,0.07);background:#fff}
+.tier-row:last-child{border-bottom:none}
+.tier-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.b-t1{background:#fcebeb;color:#791f1f}.b-t2{background:#fff3e0;color:#8a5000}.b-t3{background:#e1f5ee;color:#0a6647}
+.tier-name{font-size:12px;font-weight:600;color:#0f2044}
+.tier-fields{font-size:10.5px;color:#8a96ab;line-height:1.45;margin-top:2px}
+.tier-count{font-size:17px;font-weight:600;color:#0f2044;margin-left:auto;flex-shrink:0}
+.output-card{display:none;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;background:#fff;padding:12px 14px;margin-top:8px}
+.output-card.show{display:block}
+.output-row{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:#1a2a44;padding:4px 0}
+.output-path{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#8a96ab}
+.guard-strip{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 13px;background:#f1f0fc;border:0.5px solid #c5c0ee;border-radius:8px}
+.guard-text{font-size:11.5px;color:#3c3489;line-height:1.5}
+.controls{padding:14px 0 0;display:flex;gap:8px}
+.btn-primary{background:#0f2044;color:#fff;border:none;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;flex:1}
+.btn-primary:disabled{opacity:0.4;cursor:default}
+.btn-secondary{background:#fff;color:#0f2044;border:0.5px solid rgba(15,32,68,0.3);border-radius:8px;padding:12px 14px;font-size:13px;cursor:pointer}
+.btn-secondary:disabled{opacity:0.4;cursor:default}
+.empty-feed{padding:18px;text-align:center;color:#8a96ab;font-size:12px;background:#fff;border-radius:10px;border:0.5px solid rgba(15,32,68,0.1)}
+.footer{text-align:center;padding:26px 16px 8px}
+.footer p{font-size:11px;color:#8a96ab;line-height:1.7}
+.footer strong{color:#3a5a9a}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hd">
+  <div class="hd-badges">
+    <span class="badge">Layer 1 POC</span>
+    <span class="badge blue">4 sources · incl. unstructured</span>
+  </div>
+  <div class="hd-title">Data Discovery &amp; Ingestion</div>
+  <div class="hd-sub">AI agent discovers and classifies personal data across PrivacyCo's systems — structured and unstructured. Dummy data only.</div>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="tabBiz" onclick="setView('biz')">Executive view</button>
+    <button class="toggle-btn" id="tabTech" onclick="setView('tech')">Technical scan</button>
+  </div>
+</div>
+
+<!-- ============ EXECUTIVE VIEW ============ -->
+<div class="view active" id="viewBiz">
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-val">4</div><div class="kpi-label">business systems scanned — incl. SharePoint documents</div></div>
+    <div class="kpi"><div class="kpi-val">40</div><div class="kpi-label">records &amp; documents reviewed</div></div>
+    <div class="kpi"><div class="kpi-val">39</div><div class="kpi-label">personal data items identified</div></div>
+    <div class="kpi"><div class="kpi-val">2</div><div class="kpi-label">critical findings referred to the Privacy Officer</div></div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="finding-icon">&#9888;&#65039;</span><div class="finding-title">2 critical findings</div></div>
+    <div class="finding-item"><span class="finding-num">1.</span> Customer health information was found in the sales system — where it doesn't belong. Affects 4 of 10 customers.</div>
+    <div class="finding-item"><span class="finding-num">2.</span> A medical certificate and a customer complaint mentioning a health condition sit in SharePoint folders that every staff member can open.</div>
+    <div class="finding-item" style="font-style:italic">In both cases the AI agent touched nothing — it referred the findings to the Privacy Officer for a decision.</div>
+  </div>
+
+  <div class="sec">Where the personal data lives</div>
+
+  <div class="sys">
+    <div class="sys-top">
+      <div class="sys-icon" style="background:#e6f1fb">&#9729;&#65039;</div>
+      <div><div class="sys-name">Salesforce</div><div class="sys-desc">Sales &amp; customer system · 10 customer records</div></div>
+      <div class="sys-count"><div class="sys-count-num">8</div><div class="sys-count-label">attributes</div></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-std"><span class="dot" style="background:#1d9e75"></span>Standard personal data</div>
+      <div class="chips"><span class="chip ch-std">Name</span><span class="chip ch-std">Email</span><span class="chip ch-std">Phone</span><span class="chip ch-std">Postcode</span><span class="chip ch-std">Country</span><span class="chip ch-std">Customer ID</span><span class="chip ch-std">Account type</span></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-spc"><span class="dot" style="background:#e24b4a"></span>Special category — should not be here</div>
+      <div class="chips"><span class="chip ch-spc">Health condition</span></div>
+    </div>
+  </div>
+
+  <div class="sys">
+    <div class="sys-top">
+      <div class="sys-icon" style="background:#fff3e0">&#128101;</div>
+      <div><div class="sys-name">Workday</div><div class="sys-desc">HR system · 10 employee records</div></div>
+      <div class="sys-count"><div class="sys-count-num">12</div><div class="sys-count-label">attributes</div></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-std"><span class="dot" style="background:#1d9e75"></span>Standard personal data</div>
+      <div class="chips"><span class="chip ch-std">Name</span><span class="chip ch-std">Email</span><span class="chip ch-std">Employee ID</span><span class="chip ch-std">Salary band</span><span class="chip ch-std">Employment type</span><span class="chip ch-std">Start date</span><span class="chip ch-std">Department</span></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-sen"><span class="dot" style="background:#e8b44a"></span>Highly sensitive — identity &amp; demographic</div>
+      <div class="chips"><span class="chip ch-sen">Tax file number</span><span class="chip ch-sen">Date of birth</span><span class="chip ch-sen">Gender</span><span class="chip ch-sen">Nationality</span></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-spc"><span class="dot" style="background:#e24b4a"></span>Special category — health-related</div>
+      <div class="chips"><span class="chip ch-spc">Medical leave days</span></div>
+    </div>
+  </div>
+
+  <div class="sys">
+    <div class="sys-top">
+      <div class="sys-icon" style="background:#f3fbf8">&#128451;&#65039;</div>
+      <div><div class="sys-name">Oracle HCM</div><div class="sys-desc">Payroll system · 10 payroll records</div></div>
+      <div class="sys-count"><div class="sys-count-num">12</div><div class="sys-count-label">attributes</div></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-std"><span class="dot" style="background:#1d9e75"></span>Standard personal data</div>
+      <div class="chips"><span class="chip ch-std">Name</span><span class="chip ch-std">Employee ID</span><span class="chip ch-std">Position</span><span class="chip ch-std">Grade</span><span class="chip ch-std">Payroll ID</span><span class="chip ch-std">Leave balance</span></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-sen"><span class="dot" style="background:#e8b44a"></span>Highly sensitive — financial</div>
+      <div class="chips"><span class="chip ch-sen">Bank account</span><span class="chip ch-sen">Super fund</span><span class="chip ch-sen">Super member no.</span><span class="chip ch-sen">Gross salary</span><span class="chip ch-sen">Tax withheld</span><span class="chip ch-sen">Net pay</span></div>
+    </div>
+  </div>
+
+  <div class="sys">
+    <div class="sys-top">
+      <div class="sys-icon" style="background:#eeedfe">&#128196;</div>
+      <div><div class="sys-name">SharePoint</div><div class="sys-desc">Document library · 10 documents · 7 contain personal data</div></div>
+      <div class="sys-count"><div class="sys-count-num">7</div><div class="sys-count-label">documents</div></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-std"><span class="dot" style="background:#1d9e75"></span>Standard personal data</div>
+      <div class="chips"><span class="chip ch-std">Customer contract</span><span class="chip ch-std">Reference check</span></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-sen"><span class="dot" style="background:#e8b44a"></span>Highly sensitive — identity &amp; financial</div>
+      <div class="chips"><span class="chip ch-sen">Onboarding form (tax &amp; bank)</span><span class="chip ch-sen">Passport scan</span><span class="chip ch-sen">Payroll file</span></div>
+    </div>
+    <div class="attr-group">
+      <div class="attr-label lbl-spc"><span class="dot" style="background:#e24b4a"></span>Special category — open to all staff</div>
+      <div class="chips"><span class="chip ch-spc">Medical certificate</span><span class="chip ch-spc">Complaint email (health)</span></div>
+    </div>
+  </div>
+
+  <div class="sec">How to read this</div>
+  <div class="legend">
+    <div class="legend-row"><span class="dot" style="background:#1d9e75"></span><div><strong style="color:#0a6647">Standard personal data</strong> — identifies a person; needs baseline protection (22 items)</div></div>
+    <div class="legend-row"><span class="dot" style="background:#e8b44a"></span><div><strong style="color:#8a5000">Highly sensitive</strong> — financial or identity data; misuse causes real harm (13 items)</div></div>
+    <div class="legend-row"><span class="dot" style="background:#e24b4a"></span><div><strong style="color:#791f1f">Special category</strong> — health data; strictest legal rules apply (4 items)</div></div>
+  </div>
+
+  <div class="assure">
+    <span style="font-size:14px;flex-shrink:0">&#128737;&#65039;</span>
+    <div class="assure-text">The AI agent read field names and document indicators only — never the actual personal data values. Documents were inspected in place, no copies were made, and nothing can be changed or deleted without human approval. Every action is audit-logged.</div>
+  </div>
+
+</div>
+
+<!-- ============ TECHNICAL VIEW ============ -->
+<div class="view" id="viewTech">
+
+  <div class="agent-status">
+    <div class="status-row">
+      <div class="status-dot" id="agentDot"></div>
+      <div>
+        <div class="status-label" id="agentLabel">Discovery agent — ready</div>
+        <div class="status-detail" id="agentDetail">Scope: PrivacyCo POC folder · field names + document content indicators only</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Items scanned</div><div class="metric-val" id="mFields">0</div><div class="metric-sub">39 fields + 10 documents</div></div>
+    <div class="metric"><div class="metric-label">PI items classified</div><div class="metric-val" id="mPI">0</div><div class="metric-sub">fields + documents</div></div>
+    <div class="metric"><div class="metric-label">Special category</div><div class="metric-val" id="mSpecial">0</div><div class="metric-sub">health-related items</div></div>
+    <div class="metric"><div class="metric-label">Critical findings</div><div class="metric-val" id="mAnomaly">0</div><div class="metric-sub">escalated to DPO</div></div>
+  </div>
+
+  <div class="sec">Source system exports · 01_Source_System_Exports</div>
+
+  <div class="source-card idle" id="src-sf">
+    <div class="source-top">
+      <div class="source-icon" style="background:#e6f1fb">&#9729;&#65039;</div>
+      <div><div class="source-name">salesforce_crm_export.csv</div><div class="source-type">Salesforce CRM · structured</div></div>
+      <div class="source-stat">10 records<br>11 fields</div>
+    </div>
+    <div class="scan-bar-wrap"><div class="scan-bar" id="sf-bar"></div></div>
+  </div>
+
+  <div class="source-card idle" id="src-wd">
+    <div class="source-top">
+      <div class="source-icon" style="background:#fff3e0">&#128101;</div>
+      <div><div class="source-name">workday_hr_export.csv</div><div class="source-type">Workday HR · structured</div></div>
+      <div class="source-stat">10 records<br>14 fields</div>
+    </div>
+    <div class="scan-bar-wrap"><div class="scan-bar" id="wd-bar"></div></div>
+  </div>
+
+  <div class="source-card idle" id="src-oh">
+    <div class="source-top">
+      <div class="source-icon" style="background:#f3fbf8">&#128451;&#65039;</div>
+      <div><div class="source-name">oracle_hcm_export.csv</div><div class="source-type">Oracle HCM · structured</div></div>
+      <div class="source-stat">10 records<br>14 fields</div>
+    </div>
+    <div class="scan-bar-wrap"><div class="scan-bar" id="oh-bar"></div></div>
+  </div>
+
+  <div class="source-card idle" id="src-sp">
+    <div class="source-top">
+      <div class="source-icon" style="background:#eeedfe">&#128196;</div>
+      <div><div class="source-name">sharepoint_doclib_export.csv</div><div class="source-type">SharePoint · unstructured documents</div></div>
+      <div class="source-stat">10 documents<br>6 sites</div>
+    </div>
+    <div class="scan-bar-wrap"><div class="scan-bar" id="sp-bar"></div></div>
+  </div>
+
+  <div class="anomaly-card" id="anomaly1">
+    <div class="anomaly-title">&#9888;&#65039; Finding 1 — special category data in CRM</div>
+    <div class="anomaly-body">Field <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">health_condition</span> in salesforce_crm_export.csv. Health data has no lawful place in a sales system. Affects CRM-001, CRM-003, CRM-006, CRM-009.</div>
+    <div class="anomaly-tags"><span class="anomaly-tag">APP 3</span><span class="anomaly-tag">APP 5</span><span class="anomaly-tag">GDPR Art. 9</span><span class="anomaly-tag">NDB</span></div>
+  </div>
+
+  <div class="anomaly-card" id="anomaly2">
+    <div class="anomaly-title">&#9888;&#65039; Finding 2 — health documents open to all staff</div>
+    <div class="anomaly-body">Medical_Certificate_EMP-004 (Leave Documents) and Customer_Complaint_CRM-009 (Complaints) both contain health information and sit in SharePoint libraries with "Open - All Staff" access.</div>
+    <div class="anomaly-tags"><span class="anomaly-tag">APP 11</span><span class="anomaly-tag">GDPR Art. 9</span><span class="anomaly-tag">GDPR Art. 32</span><span class="anomaly-tag">NDB</span></div>
+    <div class="anomaly-action">&#9995; Agent action: both findings flagged for DPO review. No data touched, no permissions changed — remediation requires Layer 11 human approval.</div>
+  </div>
+
+  <div class="sec">Agent activity log</div>
+  <div id="feedWrap"><div class="empty-feed" id="emptyFeed">Press "Run scan" — replays the live MCP POC sequence incl. unstructured scanning</div></div>
+
+  <div class="sec">Classification output → Layer 2</div>
+  <div class="tier-wrap">
+    <div class="tier-row">
+      <span class="tier-badge b-t1">Tier 1</span>
+      <div style="flex:1;min-width:0"><div class="tier-name">Special category</div><div class="tier-fields">health_condition · medical_leave_days · medical certificate · complaint email (health)</div></div>
+      <div class="tier-count" id="t1Count">0</div>
+    </div>
+    <div class="tier-row">
+      <span class="tier-badge b-t2">Tier 2</span>
+      <div style="flex:1;min-width:0"><div class="tier-name">Sensitive PI</div><div class="tier-fields">TFN · DOB · bank · super · salary fields · passport scan · onboarding form · payroll file</div></div>
+      <div class="tier-count" id="t2Count">0</div>
+    </div>
+    <div class="tier-row">
+      <span class="tier-badge b-t3">Tier 3</span>
+      <div style="flex:1;min-width:0"><div class="tier-name">Standard PI</div><div class="tier-fields">names · contact details · IDs · roles · contract · reference check</div></div>
+      <div class="tier-count" id="t3Count">0</div>
+    </div>
+  </div>
+
+  <div class="output-card" id="outputCard">
+    <div class="output-row"><span>&#9989;</span><div>Discovery report v2 saved<div class="output-path">02_Data_Map/discovery_report_2026-06-11.csv</div></div></div>
+    <div class="output-row"><span>&#128203;</span><div>Audit trail written<div class="output-path">06_Audit_Log/agent_audit_log_scenario1_v2.csv</div></div></div>
+  </div>
+
+  <div class="guard-strip">
+    <span style="font-size:13px;flex-shrink:0">&#128274;</span>
+    <div class="guard-text">Privacy by design: documents inspected in place — no copies, no values retained · anomalies flagged, never actioned · every step audit-logged</div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-primary" id="btnRun" onclick="startScan()">Run scan</button>
+    <button class="btn-secondary" id="btnReset" onclick="resetScan()" disabled>Reset</button>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>
+    <strong>Layer 1 of 12 — AI-Native Privacy Management Platform</strong><br>
+    Using AI Agents in Privacy Operations with Governance Guardrails · Powered by MCP Protocol<br>
+    PrivacyCo is a fictional company. All data is dummy data created for demonstration.
+  </p>
+</div>
+
+</div>
+
+<script>
+function setView(v){
+  document.getElementById('viewBiz').className = v==='biz' ? 'view active' : 'view';
+  document.getElementById('viewTech').className = v==='tech' ? 'view active' : 'view';
+  document.getElementById('tabBiz').className = v==='biz' ? 'toggle-btn active' : 'toggle-btn';
+  document.getElementById('tabTech').className = v==='tech' ? 'toggle-btn active' : 'toggle-btn';
+}
+
+const sources=[
+ {barId:'sf-bar',cardId:'src-sf',name:'salesforce_crm_export.csv',sys:'Salesforce CRM',items:11,
+  events:[
+   {t:'t3',n:7,txt:'Classified 7 standard PI fields',meta:'record_id · names · email · phone · country · postcode'},
+   {t:'t1',n:1,txt:'Tier 1: health_condition field',meta:'Special category — unexpected in CRM context'},
+  ]},
+ {barId:'wd-bar',cardId:'src-wd',name:'workday_hr_export.csv',sys:'Workday HR',items:14,
+  events:[
+   {t:'t3',n:7,txt:'Classified 7 standard PI fields',meta:'employee_id · names · email · salary_band · employment_type · start_date'},
+   {t:'t2',n:4,txt:'Tier 2: 4 sensitive PI fields',meta:'tax_file_number · date_of_birth · gender · nationality'},
+   {t:'t1',n:1,txt:'Tier 1: medical_leave_days',meta:'Health-related — special category handling'},
+  ]},
+ {barId:'oh-bar',cardId:'src-oh',name:'oracle_hcm_export.csv',sys:'Oracle HCM',items:14,
+  events:[
+   {t:'t3',n:6,txt:'Classified 6 standard PI fields',meta:'record_id · employee_id · full_name · position · grade · leave_balance'},
+   {t:'t2',n:6,txt:'Tier 2: 6 sensitive financial fields',meta:'bank_account · super fund + member no. · gross_salary · tax · net_pay'},
+  ]},
+ {barId:'sp-bar',cardId:'src-sp',name:'sharepoint_doclib_export.csv',sys:'SharePoint',items:10,unstructured:true,
+  events:[
+   {t:'guard',n:0,txt:'Unstructured content scan engaged',meta:'Documents inspected in place — content indicators only, no copies made'},
+   {t:'t3',n:2,txt:'2 documents with standard PI',meta:'Customer_Contract_CRM-005 · Reference_Check_EMP-009'},
+   {t:'t2',n:3,txt:'3 highly sensitive documents',meta:'Onboarding_Form_EMP-007 (TFN, bank) · Passport_Scan_EMP-005 · Payroll_Reconciliation_May2026'},
+   {t:'t1',n:1,txt:'Tier 1: Medical_Certificate_EMP-004',meta:'Health document — access level: Open - All Staff'},
+   {t:'t1',n:1,txt:'Tier 1: Customer_Complaint_CRM-009',meta:'Email referencing customer health condition — Open - All Staff'},
+  ]},
+];
+let running=false,logTime=0,t1=0,t2=0,t3=0,scanned=0;
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function addLog(type,text,meta){const w=document.getElementById('feedWrap');const e=document.getElementById('emptyFeed');if(e)e.remove();const el=document.createElement('div');el.className='feed-item';el.innerHTML='<div class="feed-dot '+type+'"></div><div class="feed-text">'+text+'<div class="feed-meta">'+(meta||'')+'</div></div><div class="feed-time">'+fmt(logTime)+'</div>';w.appendChild(el);logTime++}
+function setAgent(l,d,s){document.getElementById('agentLabel').textContent=l;document.getElementById('agentDetail').textContent=d;document.getElementById('agentDot').className='status-dot '+s}
+function setN(id,v){document.getElementById(id).textContent=v}
+function bar(id,dur){return new Promise(function(res){var b=document.getElementById(id),st=Date.now();function tick(){var p=Math.min(1,(Date.now()-st)/dur);b.style.width=Math.round(p*100)+'%';p<1?requestAnimationFrame(tick):res()}requestAnimationFrame(tick)})}
+function delay(ms){return new Promise(function(r){setTimeout(r,ms)})}
+
+async function startScan(){
+  if(running)return;running=true;
+  document.getElementById('btnRun').disabled=true;document.getElementById('btnReset').disabled=true;
+  t1=0;t2=0;t3=0;scanned=0;logTime=0;
+  setAgent('Discovery agent — initialising','MCP handshake with privacy platform…','running');
+  addLog('info','MCP session established','Scope: PrivacyCo POC folder · read access only');
+  await delay(650);
+  addLog('guard','Guardrail: no raw personal data values retained','Structured: field names only · Unstructured: content indicators only');
+  await delay(550);
+  addLog('info','Enumerating 01_Source_System_Exports','4 exports: Salesforce, Workday, Oracle HCM, SharePoint (unstructured)');
+  await delay(550);
+  for(var i=0;i<sources.length;i++){
+    var s=sources[i];
+    var card=document.getElementById(s.cardId);
+    card.className='source-card scanning';
+    setAgent('Scanning '+s.sys, s.unstructured?'Inspecting document content for personal data indicators…':'Reading field structure of '+s.name+'…','running');
+    addLog('info','Opened '+s.name, s.unstructured?s.sys+' · 10 documents across 6 sites':s.sys+' · 10 records · '+s.items+' fields');
+    await bar(s.barId,1000);
+    scanned+=s.items;setN('mFields',scanned);
+    for(var j=0;j<s.events.length;j++){
+      var e=s.events[j];
+      addLog(e.t,e.txt,e.meta);
+      if(e.t==='t1'){t1+=e.n;setN('t1Count',t1);setN('mSpecial',t1)}
+      if(e.t==='t2'){t2+=e.n;setN('t2Count',t2)}
+      if(e.t==='t3'){t3+=e.n;setN('t3Count',t3)}
+      setN('mPI',t1+t2+t3);
+      await delay(480);
+    }
+    card.className='source-card done';
+    await delay(300);
+  }
+  setAgent('Anomaly analysis','Cross-referencing special category items against context and access levels…','running');
+  await delay(750);
+  addLog('t1','FINDING 1: health_condition in CRM system','4 of 10 customer records · special category outside lawful context');
+  document.getElementById('anomaly1').className='anomaly-card show';setN('mAnomaly',1);
+  await delay(750);
+  addLog('t1','FINDING 2: health documents open to all staff','Medical certificate + complaint email · uncontrolled access to special category data');
+  document.getElementById('anomaly2').className='anomaly-card show';setN('mAnomaly',2);
+  await delay(700);
+  addLog('guard','Both findings escalated to DPO — no autonomous action','Remediation requires Layer 11 human approval');
+  await delay(500);
+  addLog('info','Discovery report v2 + audit trail saved','02_Data_Map · 06_Audit_Log');
+  document.getElementById('outputCard').className='output-card show';
+  await delay(400);
+  setAgent('Scan complete — 39 PI items classified','49 items scanned (39 fields + 10 documents) · 4 special category · 2 critical findings escalated · handoff to Layer 2','done');
+  addLog('t3','Handoff to Layer 2 — Classification & Labelling','39 PI items with tier assignments passed to classification queue');
+  document.getElementById('btnReset').disabled=false;running=false;
+}
+function resetScan(){
+  running=false;t1=0;t2=0;t3=0;scanned=0;logTime=0;
+  ['mFields','mPI','mSpecial','mAnomaly','t1Count','t2Count','t3Count'].forEach(function(id){setN(id,0)});
+  setAgent('Discovery agent — ready','Scope: PrivacyCo POC folder · field names + document content indicators only','');
+  sources.forEach(function(s){document.getElementById(s.cardId).className='source-card idle';document.getElementById(s.barId).style.width='0'});
+  document.getElementById('anomaly1').className='anomaly-card';
+  document.getElementById('anomaly2').className='anomaly-card';
+  document.getElementById('outputCard').className='output-card';
+  document.getElementById('feedWrap').innerHTML='<div class="empty-feed" id="emptyFeed">Press "Run scan" — replays the live MCP POC sequence incl. unstructured scanning</div>';
+  document.getElementById('btnRun').disabled=false;document.getElementById('btnReset').disabled=true;
+}
+</script>
+</body>
+</html>

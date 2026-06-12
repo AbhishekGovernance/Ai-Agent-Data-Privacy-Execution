@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Native Privacy Management Platform — Architecture</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f5f7fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+
+  .page-wrap { max-width: 520px; margin: 0 auto; padding: 0 0 40px; }
+
+  .header { background: #0f2044; padding: 28px 20px 20px; text-align: center; }
+  .header-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #e8b44a; margin-bottom: 8px; }
+  .header-title { font-size: 20px; font-weight: 600; color: #fff; line-height: 1.3; margin-bottom: 6px; }
+  .header-sub { font-size: 13px; color: #9aaac8; line-height: 1.5; margin-bottom: 14px; }
+  .positioning { background: rgba(59,125,216,0.15); border-left: 3px solid #3b7dd8; margin: 0 4px; padding: 11px 14px; border-radius: 0 6px 6px 0; text-align: left; }
+  .positioning p { font-size: 12px; color: #dde5f5; line-height: 1.6; font-style: italic; }
+
+  .stack-container { padding: 20px 16px 0; display: flex; flex-direction: column; }
+  .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; padding: 14px 0 7px; }
+
+  .layer-card { border: 0.5px solid rgba(15,32,68,0.14); border-radius: 9px; margin-bottom: 7px; overflow: hidden; cursor: pointer; transition: box-shadow 0.15s, transform 0.1s; background: #fff; }
+  .layer-card:hover { box-shadow: 0 3px 14px rgba(15,32,68,0.11); transform: translateY(-1px); }
+  .layer-card.expanded { box-shadow: 0 3px 18px rgba(15,32,68,0.13); }
+
+  .layer-header { display: flex; align-items: center; padding: 12px 15px; gap: 11px; }
+  .layer-num { font-size: 10px; font-weight: 700; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .layer-text-wrap { flex: 1; min-width: 0; }
+  .layer-title { font-size: 14px; font-weight: 600; line-height: 1.3; color: #0f2044; }
+  .layer-tagline { font-size: 11.5px; line-height: 1.4; margin-top: 2px; }
+  .chevron { font-size: 11px; color: #8a9ab8; transition: transform 0.22s; flex-shrink: 0; }
+  .layer-card.expanded .chevron { transform: rotate(180deg); }
+
+  .layer-detail { display: none; border-top: 0.5px solid rgba(15,32,68,0.1); padding: 15px; background: #fafbfd; }
+  .layer-card.expanded .layer-detail { display: block; }
+
+  .detail-desc { font-size: 13px; color: #3d4a5c; line-height: 1.65; margin-bottom: 12px; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .detail-item { background: rgba(15,32,68,0.04); border-radius: 7px; padding: 10px 11px; }
+  .detail-item-label { font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8a9ab8; margin-bottom: 4px; }
+  .detail-item-val { font-size: 12px; color: #1a2a44; line-height: 1.45; }
+  .conn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .conn-badge { font-size: 11px; padding: 4px 9px; border-radius: 5px; font-weight: 500; }
+
+  /* Layer themes */
+  .l-base .layer-num { background: #e1f5ee; color: #0a6647; }
+  .l-base .layer-header { background: #f3fbf8; }
+  .l-base .layer-tagline { color: #0f6e56; }
+
+  .l-ops .layer-num { background: #e6effe; color: #1a3580; }
+  .l-ops .layer-header { background: #f5f8ff; }
+  .l-ops .layer-tagline { color: #3a5a9a; }
+
+  .l-orch .layer-num { background: #0f2044; color: #fff; }
+  .l-orch .layer-header { background: #0f2044; }
+  .l-orch .layer-title { color: #fff !important; }
+  .l-orch .layer-tagline { color: #9aaac8 !important; }
+  .l-orch .layer-detail { background: #f5f7fb; }
+
+  .l-gov .layer-num { background: #fff0d4; color: #9a6800; }
+  .l-gov .layer-header { background: #fffef7; }
+  .l-gov .layer-tagline { color: #a07020; }
+
+  .connector-line { display: flex; align-items: center; justify-content: center; height: 16px; color: rgba(15,32,68,0.22); font-size: 15px; margin: -3px 0; }
+
+  .source-box { border: 1.5px dashed rgba(15,32,68,0.22); border-radius: 9px; padding: 14px 16px; text-align: center; margin-bottom: 7px; background: #fff; }
+  .source-title { font-size: 10.5px; font-weight: 700; color: #0f2044; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .source-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .source-chip { font-size: 11px; background: rgba(15,32,68,0.07); color: #1a2a44; padding: 4px 9px; border-radius: 5px; font-weight: 500; }
+
+  .legend { margin: 6px 16px 0; border: 0.5px solid rgba(15,32,68,0.12); border-radius: 9px; padding: 13px 15px; background: #fff; }
+  .legend-title { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8a9ab8; margin-bottom: 9px; }
+  .legend-items { display: flex; flex-direction: column; gap: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 9px; font-size: 12px; color: #3d4a5c; }
+  .legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+
+  .footer { text-align: center; padding: 24px 16px 10px; }
+  .footer p { font-size: 11px; color: #8a9ab8; line-height: 1.6; }
+  .footer strong { color: #3a5a9a; }
+
+  @media (max-width: 400px) {
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="header">
+    <div class="header-tag">Conceptual Architecture</div>
+    <div class="header-title">AI-Native Privacy Management Platform</div>
+    <div class="header-sub">AI agents operate. Humans govern.</div>
+    <div class="positioning">
+      <p>"AI agents are not a future concept. They are operational today — the only question is whether your organisation uses them responsibly or lets others define the standard."</p>
+    </div>
+  </div>
+
+  <div class="stack-container">
+
+    <div class="section-label" style="color:#1d8f6e;">Foundation — Source Systems</div>
+
+    <div class="source-box">
+      <div class="source-title">Source Systems</div>
+      <div class="source-chips">
+        <span class="source-chip">Salesforce</span>
+        <span class="source-chip">Workday</span>
+        <span class="source-chip">Oracle HCM</span>
+        <span class="source-chip">SharePoint</span>
+        <span class="source-chip">Databases</span>
+        <span class="source-chip">APIs</span>
+      </div>
+    </div>
+
+    <div class="connector-line">↑</div>
+
+    <div class="section-label" style="color:#0f6e56;">AI Foundation Agents</div>
+
+    <div class="layer-card l-base" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">1</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Data Discovery &amp; Ingestion</div>
+          <div class="layer-tagline">Agent scans source systems and ingests data inventory</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">The foundation layer. Connects to all source systems via the platform's native connectors, continuously scans for new and modified data assets, builds and maintains a live data inventory, and passes all discovered assets to Layer 2 for classification. MCP connects the AI agent to the privacy platform — source system connectors remain the platform's responsibility.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Discovery Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Scan mode</div><div class="detail-item-val">Continuous + triggered on change events</div></div>
+          <div class="detail-item"><div class="detail-item-label">Connector note</div><div class="detail-item-val">Platform owns source connectors; MCP links AI to platform only</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Live data inventory → Layer 2 classification queue</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-card l-base" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">2</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Classification &amp; Labelling</div>
+          <div class="layer-tagline">Agent identifies and labels personal and sensitive data</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Applies automated classification to all data discovered by Layer 1. Identifies personal information, sensitive categories (health, biometric, financial), and special categories under GDPR. Assigns regulatory jurisdiction tags, confidence scores, and sensitivity labels. All classification feeds directly into every operational layer above.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Classification Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Categories</div><div class="detail-item-val">PI · Sensitive PI · Special category · De-identified</div></div>
+          <div class="detail-item"><div class="detail-item-label">Jurisdictions</div><div class="detail-item-val">AU · UK/EU · US · JP labelling schemas</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Labelled data inventory, confidence scores, jurisdiction tags</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector-line">│</div>
+
+    <div class="section-label" style="color:#1a3260;">AI Operational Specialist Agents</div>
+
+    <div class="layer-card l-ops" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">3</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Consent Management</div>
+          <div class="layer-tagline">Agent captures, records, and enforces consent preferences</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Operates the consent platform: records individual consent and preference signals with timestamped evidence, propagates consent decisions downstream to processing systems, monitors for consent drift (expired, revoked, or conflicting), and ensures processing activities only proceed where valid consent or another lawful basis applies.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Consent Orchestration Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Propagates to</div><div class="detail-item-val">Layers 4, 6, 7 — enforces downstream</div></div>
+          <div class="detail-item"><div class="detail-item-label">Evidence standard</div><div class="detail-item-val">Timestamped, version-locked, tamper-evident</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Consent records, preference profiles, propagation logs</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-card l-ops" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">4</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Cookie &amp; Tracking Management</div>
+          <div class="layer-tagline">Agent scans, classifies, and enforces tracking compliance</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Continuously scans web properties to discover tracking technologies, classifies cookies and pixels by purpose and necessity, validates consent banner configurations against ePrivacy and GDPR requirements, blocks non-consented trackers, and reports compliance status to Layer 8.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Tracking Compliance Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Scope</div><div class="detail-item-val">Web, app, pixel, tag manager</div></div>
+          <div class="detail-item"><div class="detail-item-label">Frameworks</div><div class="detail-item-val">ePrivacy, GDPR, CCPA opt-out</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Cookie inventory, banner config, block decisions</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-card l-ops" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">5</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Privacy Notice Management</div>
+          <div class="layer-tagline">Agent drafts, versions, and publishes compliant notices</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Monitors changes to data flows, processing purposes, and applicable regulations. When triggered, drafts updated privacy notice content, versions and date-stamps documents, coordinates publication across digital properties, and maintains a complete version history for regulatory evidence.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Notice Management Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Triggers</div><div class="detail-item-val">Processing changes, regulatory updates, new data flows</div></div>
+          <div class="detail-item"><div class="detail-item-label">Jurisdictions</div><div class="detail-item-val">AU · UK · EU · US (state) · JP</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Versioned notices, publication records, change log</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-card l-ops" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">6</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">DSR Management</div>
+          <div class="layer-tagline">Agent receives, routes, fulfils, and closes data subject requests</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Manages the full lifecycle of Data Subject Requests — access, erasure, rectification, portability, objection. Ingests requests from intake channels, verifies identity, queries source systems via platform connectors, assembles response packages, tracks statutory deadlines, and issues compliant responses without human intervention for standard requests.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">DSR Fulfilment Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Request types</div><div class="detail-item-val">Access, erasure, rectification, portability</div></div>
+          <div class="detail-item"><div class="detail-item-label">Deadline tracking</div><div class="detail-item-val">AU 30-day · GDPR 30-day · extensions logged</div></div>
+          <div class="detail-item"><div class="detail-item-label">Escalates when</div><div class="detail-item-val">Identity unclear, competing legal basis, complex erasure</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-card l-ops" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">7</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Records Management &amp; Retention</div>
+          <div class="layer-tagline">Agent enforces retention schedules and triggers disposal</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Maintains the Records of Processing Activities (RoPA) register, applies retention schedules mapped to data categories and jurisdictions, monitors data age, automatically flags records for review or disposal, and produces audit-ready evidence of compliant retention management.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Records &amp; Retention Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Inputs from</div><div class="detail-item-val">Classification (Layer 2), Consent (Layer 3)</div></div>
+          <div class="detail-item"><div class="detail-item-label">Key artefact</div><div class="detail-item-val">RoPA — auto-maintained, audit-ready</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Retention triggers, disposal records, RoPA updates</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-card l-ops" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">8</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Risk &amp; Compliance Monitoring</div>
+          <div class="layer-tagline">Agent continuously scores risk and flags regulatory drift</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Continuously evaluates the privacy risk posture across all data flows, processing activities, and third-party relationships. Monitors for regulatory change, recalculates risk scores, and surfaces compliance gaps to Layer 12 for prioritisation and action.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Risk Monitoring Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Runs</div><div class="detail-item-val">Continuously — event-driven and scheduled</div></div>
+          <div class="detail-item"><div class="detail-item-label">Feeds into</div><div class="detail-item-val">Layers 9 (breach), 10 (assessments)</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Risk register, compliance gap report, drift alerts</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-card l-ops" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">9</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Breach Notification &amp; Response</div>
+          <div class="layer-tagline">Agent detects, triages, and notifies within obligation windows</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Monitors anomaly signals from the risk layer, detects potential data breaches, assesses notifiability against multi-jurisdiction thresholds (AU NDB scheme, GDPR 72hr), auto-drafts regulator and individual notifications, tracks obligation windows, and escalates critical incidents to human governance immediately.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Incident Response Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Jurisdictions</div><div class="detail-item-val">AU (NDB), UK/EU (GDPR), US (state laws)</div></div>
+          <div class="detail-item"><div class="detail-item-label">Triggers from</div><div class="detail-item-val">Anomaly signals (Layer 8)</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Incident record, notification drafts, countdown timers</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-card l-ops" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">10</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Assessment Management</div>
+          <div class="layer-tagline">Agent drafts, tracks, and closes PIAs and DPIAs</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">Monitors project and change registers, automatically triggers Privacy Impact Assessments and DPIAs based on risk criteria, drafts assessment content using classification data from lower layers, tracks completion deadlines, and flags overdue items to Layer 12.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Agent type</div><div class="detail-item-val">Assessment Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Frameworks</div><div class="detail-item-val">DPIA (GDPR), PIA (AU Privacy Act)</div></div>
+          <div class="detail-item"><div class="detail-item-label">Triggers from</div><div class="detail-item-val">Risk scores (Layer 8), new data flows (Layer 1)</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Draft assessments, deadline alerts, completion status</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector-line">│</div>
+
+    <div class="section-label" style="color:#0f2044;">AI Orchestration Layer</div>
+
+    <div class="layer-card l-orch" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">12</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">AI Agent Orchestration</div>
+          <div class="layer-tagline">Master orchestrator coordinates all specialist agents</div>
+        </div>
+        <div class="chevron" style="color:#9aaac8">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">The orchestration brain of the platform. Receives high-level objectives from Layer 11 governance, decomposes them into tasks, assigns specialist agents across Layers 1–10, manages inter-layer data flow, and escalates decisions that exceed defined thresholds back to humans.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Who acts</div><div class="detail-item-val">Orchestrator AI Agent</div></div>
+          <div class="detail-item"><div class="detail-item-label">Protocol</div><div class="detail-item-val">MCP — connects AI to privacy platform</div></div>
+          <div class="detail-item"><div class="detail-item-label">Key functions</div><div class="detail-item-val">Task routing, agent coordination, threshold monitoring</div></div>
+          <div class="detail-item"><div class="detail-item-label">Escalates when</div><div class="detail-item-val">Risk score, legal ambiguity, or confidence below threshold</div></div>
+        </div>
+        <div class="conn-row">
+          <span class="conn-badge" style="background:rgba(255,255,255,0.12);color:#7a9ad0;border:0.5px solid rgba(255,255,255,0.15);">↑ Escalates to Layer 11</span>
+          <span class="conn-badge" style="background:rgba(255,255,255,0.12);color:#7a9ad0;border:0.5px solid rgba(255,255,255,0.15);">↓ Directs Layers 1–10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector-line">│</div>
+
+    <div class="section-label" style="color:#b07a10;">Human Governance Layer</div>
+
+    <div class="layer-card l-gov" onclick="toggle(this)">
+      <div class="layer-header">
+        <div class="layer-num">11</div>
+        <div class="layer-text-wrap">
+          <div class="layer-title">Governance &amp; Audit</div>
+          <div class="layer-tagline">Human approves, sets policy, reviews audit trail</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="layer-detail">
+        <div class="detail-desc">The only layer where humans are the primary actors. Privacy officers and legal counsel set policy rules, approve escalated agent decisions, review immutable audit logs, and maintain regulatory accountability that cannot be delegated to AI.</div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-item-label">Who acts</div><div class="detail-item-val">Privacy Officer, Legal, DPO</div></div>
+          <div class="detail-item"><div class="detail-item-label">Role type</div><div class="detail-item-val">Governance — not operational</div></div>
+          <div class="detail-item"><div class="detail-item-label">Key functions</div><div class="detail-item-val">Policy setting, escalation approval, audit review</div></div>
+          <div class="detail-item"><div class="detail-item-label">Outputs</div><div class="detail-item-val">Approved policies, decisions, signed-off audit records</div></div>
+        </div>
+        <div class="conn-row">
+          <span class="conn-badge" style="background:#fff0d4;color:#8a6010;">↓ Escalations from Layer 12</span>
+          <span class="conn-badge" style="background:#fff0d4;color:#8a6010;">↑ Policy rules to Layer 12</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <div class="legend-title">Layer key</div>
+    <div class="legend-items">
+      <div class="legend-item"><div class="legend-dot" style="background:#1d8f6e"></div><span>Layers 1–2 — AI foundation agents (discovery, classification)</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3b7dd8"></div><span>Layers 3–10 — AI operational specialist agents</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#0f2044"></div><span>Layer 12 — AI orchestrator (coordinates all agents)</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#c8922a"></div><span>Layer 11 — Human governance (approves, sets policy)</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>
+      <strong>Using AI Agents in Privacy Operations with Governance Guardrails</strong><br>
+      Powered by MCP Protocol · Built for stakeholder presentation<br>
+      <span style="color:#b0bac8">github.com/AbhishekGovernance · Ai-Agent-Data-Privacy-Execution</span>
+    </p>
+  </div>
+
+</div>
+
+<script>
+  function toggle(card) {
+    card.classList.toggle('expanded');
+  }
+</script>
+</body>
+</html>
