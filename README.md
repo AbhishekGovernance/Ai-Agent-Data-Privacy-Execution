@@ -13,12 +13,20 @@ A live proof of concept demonstrating that an AI agent — connected to a privac
 This is not a slide deck concept. It is a working demonstration.
 
 ## Live Demo
+Best viewed on mobile or desktop — no login required.
 
 - [Platform Architecture — 12-layer interactive stack](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/)
-- [Layer 1 — Data Discovery & Ingestion POC](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer1-data-discovery.html)
-
-Best viewed on mobile or desktop — no login required.
-Best viewed on mobile or desktop — no login required.
+- [Layer 1 — Data Discovery & Ingestion](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer1-data-discovery.html)
+- [Layer 2 — Classification & Labelling](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer2-classification.html)
+- [Layer 3 — Consent Management](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer3-consent.html)
+- [Layer 4 — Cookie & Tracking Management](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer4-cookie-tracking.html)
+- [Layer 5 — Privacy Notice Management](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer5-privacy-notice.html)
+- [Layer 6 — DSR Management](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer6-dsr.html)
+- [Layer 7 — Records Management & Retention](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer7-retention.html)
+- [Layer 8 — Risk & Compliance Monitoring](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer8-risk.html)
+- [Layer 9 — Breach Notification & Response](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer9-breach.html)
+- [Layer 10 — Assessment Management](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer10-assessments.html)
+- [Layer 11 — Governance & Audit](https://abhishekgovernance.github.io/Ai-Agent-Data-Privacy-Execution/platform-layer11-governance.html)
 ---
 
 ## What Is Demonstrated
