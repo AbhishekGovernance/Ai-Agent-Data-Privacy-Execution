@@ -8,8 +8,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
 .page{max-width:520px;margin:0 auto;padding-bottom:40px}
-
-/* HEADER */
 .hd{background:#0f2044;padding:24px 18px 18px}
 .hd-tag{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#e8b44a;margin-bottom:8px}
 .hd-title{font-size:20px;font-weight:600;color:#fff;line-height:1.3;margin-bottom:6px}
@@ -17,16 +15,26 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .positioning{background:rgba(59,125,216,0.12);border-left:3px solid #3b7dd8;padding:11px 14px;border-radius:0 6px 6px 0}
 .positioning p{font-size:12px;color:#dde5f5;line-height:1.6;font-style:italic}
 
-/* STATS ROW */
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:16px}
+.context-card{margin:14px 16px 0;background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:14px}
+.context-title{font-size:12px;font-weight:700;color:#0f2044;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
+.context-row{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:0.5px solid rgba(15,32,68,0.07);font-size:12px;color:#3d4a5c}
+.context-row:last-child{border-bottom:none}
+.context-icon{font-size:14px;flex-shrink:0;width:22px;text-align:center}
+.context-label{font-weight:600;color:#0f2044;flex-shrink:0;width:90px}
+.context-val{color:#5f6b80;flex:1}
+
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:14px 16px 0}
 .stat{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:9px;padding:12px;text-align:center}
 .stat-val{font-size:22px;font-weight:700;color:#0f2044;line-height:1}
 .stat-label{font-size:10px;color:#5f6b80;margin-top:4px;line-height:1.4}
 
-/* SECTION */
-.sec{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8a96ab;padding:4px 16px 8px}
+.sec{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8a96ab;padding:16px 16px 8px}
 
-/* LAYER CARDS */
+.how-card{margin:0 16px 8px;background:#eef4fd;border:0.5px solid #6f9fd8;border-radius:10px;padding:13px 14px}
+.how-title{font-size:12.5px;font-weight:600;color:#1a3a6e;margin-bottom:7px}
+.how-row{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#1f3354;line-height:1.5;padding:4px 0}
+.how-num{font-weight:700;width:16px;flex-shrink:0}
+
 .layer-card{display:flex;align-items:center;gap:12px;padding:13px 16px;background:#fff;border-bottom:0.5px solid rgba(15,32,68,0.08);cursor:pointer;text-decoration:none;transition:background 0.1s}
 .layer-card:first-of-type{border-top:0.5px solid rgba(15,32,68,0.08)}
 .layer-card:hover{background:#f0f4fc}
@@ -35,26 +43,20 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .layer-text{flex:1;min-width:0}
 .layer-name{font-size:13.5px;font-weight:600;color:#0f2044;line-height:1.3}
 .layer-desc{font-size:11px;color:#5f6b80;margin-top:2px;line-height:1.4}
-.layer-arrow{font-size:14px;color:#9aaac8;flex-shrink:0}
+.layer-arrow{font-size:18px;color:#9aaac8;flex-shrink:0}
 .layer-tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;flex-shrink:0}
 
-/* COLOUR THEMES */
 .l-base .layer-num{background:#e1f5ee;color:#0a6647}
 .l-ops .layer-num{background:#e6effe;color:#1a3580}
-.l-orch .layer-num{background:#0f2044;color:#fff}
 .l-gov .layer-num{background:#fff3e0;color:#9a6800}
 .tag-base{background:#e1f5ee;color:#0a6647}
 .tag-ops{background:#e6effe;color:#1a3580}
 .tag-gov{background:#fff3e0;color:#9a6800}
 
-/* ARCHITECTURE SECTION */
-.arch-card{margin:0 16px 8px;background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:14px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:12px;transition:background 0.1s}
-.arch-card:hover{background:#f0f4fc}
-.arch-icon{width:40px;height:40px;background:#0f2044;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.arch-name{font-size:14px;font-weight:600;color:#0f2044}
-.arch-desc{font-size:11.5px;color:#5f6b80;margin-top:3px;line-height:1.4}
+.legend{margin:8px 16px 0;display:flex;gap:10px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#5f6b80}
+.legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
 
-/* FOOTER */
 .footer{text-align:center;padding:24px 16px 8px}
 .footer p{font-size:11px;color:#8a96ab;line-height:1.7}
 .footer strong{color:#3a5a9a}
@@ -66,35 +68,43 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 <div class="hd">
   <div class="hd-tag">AI-Native Privacy Platform · Live POC</div>
   <div class="hd-title">AI Agents Operate. Humans Govern.</div>
-  <div class="hd-sub">A 11-layer proof of concept demonstrating AI-native privacy operations — architecturally distinct from OneTrust, DataGrail, and BigID. PrivacyCo fictional environment · dummy data only.</div>
+  <div class="hd-sub">An 11-layer proof of concept demonstrating AI-native privacy operations — architecturally distinct from OneTrust, DataGrail, and BigID. PrivacyCo fictional environment · dummy data only.</div>
   <div class="positioning">
     <p>"AI agents are not a future concept. They are operational today — the only question is whether your organisation uses them responsibly or lets others define the standard."</p>
   </div>
 </div>
 
+<div class="context-card">
+  <div class="context-title">What you are looking at</div>
+  <div class="context-row"><span class="context-icon">&#127970;</span><span class="context-label">Company</span><span class="context-val">PrivacyCo — fictional company, dummy data</span></div>
+  <div class="context-row"><span class="context-icon">&#128101;</span><span class="context-label">People</span><span class="context-val">10 customers · 10 employees · 10 payroll records</span></div>
+  <div class="context-row"><span class="context-icon">&#128451;&#65039;</span><span class="context-label">Source systems</span><span class="context-val">Salesforce · Workday · Oracle HCM · SharePoint</span></div>
+  <div class="context-row"><span class="context-icon">&#129302;</span><span class="context-label">AI agent</span><span class="context-val">Claude via MCP · reads data, never acts without approval</span></div>
+  <div class="context-row"><span class="context-icon">&#128100;</span><span class="context-label">Key character</span><span class="context-val">Tom Wallace (CRM-009) · consent revoked · DSR overdue · health data in CRM</span></div>
+</div>
+
 <div class="stats">
-  <div class="stat"><div class="stat-val">11</div><div class="stat-label">operational layers</div></div>
-  <div class="stat"><div class="stat-val">4</div><div class="stat-label">source systems</div></div>
+  <div class="stat"><div class="stat-val">11</div><div class="stat-label">AI agent layers</div></div>
+  <div class="stat"><div class="stat-val">39</div><div class="stat-label">PI items found</div></div>
   <div class="stat"><div class="stat-val">0</div><div class="stat-label">autonomous irreversible actions</div></div>
 </div>
 
-<div class="sec">Start here</div>
-<a class="arch-card" href="index.html#stack">
-  <div class="arch-icon">&#9776;</div>
-  <div>
-    <div class="arch-name">Full Architecture Diagram</div>
-    <div class="arch-desc">Interactive 12-layer stack — tap each layer to expand · suitable for senior stakeholders</div>
-  </div>
-  <div class="layer-arrow">&#8250;</div>
-</a>
+<div class="sec">How to use this demo</div>
+<div class="how-card">
+  <div class="how-title">Follow the story from Layer 1 to Layer 11</div>
+  <div class="how-row"><span class="how-num">1.</span>Each layer is a working POC — tap the layer card to open it</div>
+  <div class="how-row"><span class="how-num">2.</span>Inside each layer: switch between Executive view (plain English) and Technical run (animated agent)</div>
+  <div class="how-row"><span class="how-num">3.</span>Watch Tom Wallace's case build across layers — a single customer whose data touches every part of the platform</div>
+  <div class="how-row"><span class="how-num">4.</span>Layer 11 is interactive — tap the DPO approval buttons to see governance in action</div>
+</div>
 
-<div class="sec" style="margin-top:8px">AI Foundation Agents — Layers 1 & 2</div>
+<div class="sec">AI Foundation Agents</div>
 
 <a class="layer-card l-base" href="platform-layer1-data-discovery.html">
   <div class="layer-num">1</div>
   <div class="layer-text">
     <div class="layer-name">Data Discovery &amp; Ingestion</div>
-    <div class="layer-desc">Agent scans 4 systems · finds health data in CRM · 2 critical findings</div>
+    <div class="layer-desc">Agent scans Salesforce, Workday, Oracle HCM, SharePoint · finds health data in CRM · 2 critical findings</div>
   </div>
   <span class="layer-tag tag-base">Foundation</span>
   <div class="layer-arrow">&#8250;</div>
@@ -104,19 +114,19 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <div class="layer-num">2</div>
   <div class="layer-text">
     <div class="layer-name">Classification &amp; Labelling</div>
-    <div class="layer-desc">39 items · 22 personal · 13 sensitive · 4 special category · jurisdiction mapping</div>
+    <div class="layer-desc">39 items classified · 22 personal · 13 sensitive · 4 special category · 4 jurisdiction regimes mapped</div>
   </div>
   <span class="layer-tag tag-base">Foundation</span>
   <div class="layer-arrow">&#8250;</div>
 </a>
 
-<div class="sec" style="margin-top:8px">AI Operational Agents — Layers 3–10</div>
+<div class="sec">AI Operational Agents</div>
 
 <a class="layer-card l-ops" href="platform-layer3-consent.html">
   <div class="layer-num">3</div>
   <div class="layer-text">
     <div class="layer-name">Consent Management</div>
-    <div class="layer-desc">6 allowed · 4 blocked · Tom Wallace revocation honoured · drift detected</div>
+    <div class="layer-desc">Marketing campaign evaluated · 6 allowed · 4 blocked · Tom Wallace's revocation honoured</div>
   </div>
   <span class="layer-tag tag-ops">Operational</span>
   <div class="layer-arrow">&#8250;</div>
@@ -126,7 +136,7 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <div class="layer-num">4</div>
   <div class="layer-text">
     <div class="layer-name">Cookie &amp; Tracking Management</div>
-    <div class="layer-desc">14 technologies · 3 violations blocked · Hotjar ignoring Tom Wallace's opt-out</div>
+    <div class="layer-desc">14 technologies scanned · 3 violations blocked · Hotjar still recording Tom Wallace 25 days after opt-out</div>
   </div>
   <span class="layer-tag tag-ops">Operational</span>
   <div class="layer-arrow">&#8250;</div>
@@ -136,7 +146,7 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <div class="layer-num">5</div>
   <div class="layer-text">
     <div class="layer-name">Privacy Notice Management</div>
-    <div class="layer-desc">3 triggers · v4 drafted same day · 4 jurisdictions · version history maintained</div>
+    <div class="layer-desc">3 triggers detected · Privacy Notice v4 drafted same day · 4 jurisdictions updated</div>
   </div>
   <span class="layer-tag tag-ops">Operational</span>
   <div class="layer-arrow">&#8250;</div>
@@ -146,7 +156,7 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <div class="layer-num">6</div>
   <div class="layer-text">
     <div class="layer-name">DSR Management</div>
-    <div class="layer-desc">5 requests · Tom Wallace 4 days to deadline · 2 auto-fulfilled · 1 legal hold</div>
+    <div class="layer-desc">5 active requests · Tom Wallace access request 4 days from statutory deadline · 2 auto-fulfilled</div>
   </div>
   <span class="layer-tag tag-ops">Operational</span>
   <div class="layer-arrow">&#8250;</div>
@@ -156,7 +166,7 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <div class="layer-num">7</div>
   <div class="layer-text">
     <div class="layer-name">Records Management &amp; Retention</div>
-    <div class="layer-desc">2 overdue disposals · passport scan 7yr 2mo · legal hold · RoPA auto-maintained</div>
+    <div class="layer-desc">2 records overdue for deletion · passport scan held 7 years 2 months · legal hold applied · RoPA live</div>
   </div>
   <span class="layer-tag tag-ops">Operational</span>
   <div class="layer-arrow">&#8250;</div>
@@ -166,7 +176,7 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <div class="layer-num">8</div>
   <div class="layer-text">
     <div class="layer-name">Risk &amp; Compliance Monitoring</div>
-    <div class="layer-desc">Risk score 58 · 2 critical · 4 high · AU 62% · GDPR 58% · target below 30</div>
+    <div class="layer-desc">Risk score 58 (target: below 30) · 2 critical · 4 high · AU 62% · GDPR 58% compliant</div>
   </div>
   <span class="layer-tag tag-ops">Operational</span>
   <div class="layer-arrow">&#8250;</div>
@@ -176,7 +186,7 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <div class="layer-num">9</div>
   <div class="layer-text">
     <div class="layer-name">Breach Notification &amp; Response</div>
-    <div class="layer-desc">INC-001 notifiable · OAIC + ICO overdue · 6 drafts awaiting DPO sign-off</div>
+    <div class="layer-desc">Notifiable breach confirmed · OAIC and ICO notification windows expired · 6 drafts awaiting DPO</div>
   </div>
   <span class="layer-tag tag-ops">Operational</span>
   <div class="layer-arrow">&#8250;</div>
@@ -186,23 +196,29 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   <div class="layer-num">10</div>
   <div class="layer-text">
     <div class="layer-name">Assessment Management</div>
-    <div class="layer-desc">DPIA-001 drafted in 0 days · health data never assessed · 3 assessments triggered</div>
+    <div class="layer-desc">DPIA for health data drafted in 0 days · health data processing never assessed · 3 PIAs triggered</div>
   </div>
   <span class="layer-tag tag-ops">Operational</span>
   <div class="layer-arrow">&#8250;</div>
 </a>
 
-<div class="sec" style="margin-top:8px">Human Governance — Layer 11</div>
+<div class="sec">Human Governance Layer</div>
 
 <a class="layer-card l-gov" href="platform-layer11-governance.html">
   <div class="layer-num">11</div>
   <div class="layer-text">
-    <div class="layer-name">Governance &amp; Audit</div>
-    <div class="layer-desc">6 DPO decisions queued · tap to approve · audit trail · policy register</div>
+    <div class="layer-name">Governance &amp; Audit ← Start here if pressed for time</div>
+    <div class="layer-desc">6 DPO decisions queued · tap approve to see governance in action · full audit trail · policy register</div>
   </div>
   <span class="layer-tag tag-gov">Human</span>
   <div class="layer-arrow">&#8250;</div>
 </a>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#1d9e75"></span>Foundation agents (Layers 1–2)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b7dd8"></span>Operational agents (Layers 3–10)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#c8922a"></span>Human governance (Layer 11)</div>
+</div>
 
 <div class="footer">
   <p>
