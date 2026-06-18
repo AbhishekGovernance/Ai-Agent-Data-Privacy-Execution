@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer 10 — Assessment Management | PrivacyCo AI Platform</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.page{max-width:520px;margin:0 auto;padding-bottom:40px}
+.hd{background:#0f2044;padding:22px 18px 16px}
+.badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px}
+.badge.green{background:rgba(29,143,110,0.25);color:#5dcaa5;border:0.5px solid rgba(93,202,165,0.3)}
+.badge.blue{background:rgba(59,125,216,0.2);color:#7ab0e8;border:0.5px solid rgba(59,125,216,0.3)}
+.hd-title{font-size:18px;font-weight:600;color:#fff;margin-top:8px}
+.hd-sub{font-size:12px;color:#9aaac8;margin-top:4px;line-height:1.5}
+.toggle-wrap{display:flex;gap:6px;background:rgba(255,255,255,0.08);border-radius:9px;padding:4px;margin-top:14px}
+.toggle-btn{flex:1;border:none;border-radius:6px;padding:9px 10px;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#9aaac8}
+.toggle-btn.active{background:#fff;color:#0f2044}
+.view{display:none;padding:16px}
+.view.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kpi{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:9px;padding:13px 14px}
+.kpi-val{font-size:24px;font-weight:600;color:#0f2044;line-height:1}
+.kpi-label{font-size:11px;color:#5f6b80;margin-top:5px;line-height:1.4}
+.sec{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8a96ab;padding:18px 0 8px}
+.assess-card{border-radius:10px;padding:13px 14px;margin-bottom:8px;border:0.5px solid}
+.assess-card.urgent{background:#fcebeb;border-color:#e24b4a}
+.assess-card.progress{background:#eef4fd;border-color:#6f9fd8}
+.assess-card.review{background:#fdf6e9;border-color:#d9a93f}
+.assess-card.done{background:#f3fbf8;border-color:#1d9e75}
+.a-head{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.a-id{font-size:10px;font-family:ui-monospace,Menlo,monospace;color:#5f6b80;flex-shrink:0}
+.a-name{font-size:12.5px;font-weight:600;color:#0f2044;flex:1}
+.a-tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.at-urgent{background:#fcebeb;color:#791f1f}.at-prog{background:#e6effe;color:#1a3580}.at-review{background:#fff3e0;color:#8a5000}.at-done{background:#e1f5ee;color:#0a6647}
+.a-body{font-size:12px;color:#5f6b80;line-height:1.6}
+.a-deadline{font-size:11px;font-weight:700;margin-top:6px}
+.dpia-card{background:#eef4fd;border:0.5px solid #6f9fd8;border-radius:10px;padding:13px 14px}
+.dpia-title{font-size:13px;font-weight:600;color:#1a3a6e;margin-bottom:8px}
+.dpia-section{padding:7px 0;border-top:0.5px solid rgba(40,80,150,0.15)}
+.dpia-section:first-of-type{border-top:none;padding-top:0}
+.dpia-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6090c0;margin-bottom:3px}
+.dpia-content{font-size:12px;color:#1f3354;line-height:1.55}
+.assure{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:12px 14px;background:#eef8f4;border:0.5px solid #9dd4be;border-radius:9px}
+.assure-text{font-size:11.5px;color:#085041;line-height:1.6}
+.agent-status{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.status-row{display:flex;align-items:flex-start;gap:10px}
+.status-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px;background:#b4b2a9}
+.status-dot.running{background:#1d9e75;animation:pulse 1.2s infinite}
+.status-dot.done{background:#1d9e75}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.status-label{font-size:13px;font-weight:600;color:#0f2044}
+.status-detail{font-size:11px;color:#5f6b80;margin-top:3px;line-height:1.5}
+.metrics-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.metric{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:8px;padding:10px 12px}
+.metric-label{font-size:10px;color:#8a96ab;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:600;color:#0f2044;line-height:1}
+.metric-sub{font-size:10.5px;color:#8a96ab;margin-top:3px}
+.feed-wrap{border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;overflow:hidden;background:#fff}
+.feed-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:0.5px solid rgba(15,32,68,0.07);font-size:12px}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.feed-dot.ok{background:#1d9e75}.feed-dot.warn{background:#e8b44a}.feed-dot.info{background:#3b7dd8}.feed-dot.guard{background:#7f77dd}.feed-dot.block{background:#e24b4a}
+.feed-text{flex:1;color:#1a2a44;line-height:1.45}
+.feed-meta{font-size:10.5px;color:#8a96ab;margin-top:1px}
+.empty{padding:18px;text-align:center;color:#8a96ab;font-size:12px;background:#fff;border-radius:10px;border:0.5px solid rgba(15,32,68,0.1)}
+.output-card{display:none;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;background:#fff;padding:12px 14px;margin-top:8px}
+.output-card.show{display:block}
+.output-row{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:#1a2a44;padding:4px 0}
+.output-path{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#8a96ab}
+.controls{padding:14px 0 0;display:flex;gap:8px}
+.btn-primary{background:#0f2044;color:#fff;border:none;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;flex:1}
+.btn-primary:disabled{opacity:0.4;cursor:default}
+.btn-secondary{background:#fff;color:#0f2044;border:0.5px solid rgba(15,32,68,0.3);border-radius:8px;padding:12px 14px;font-size:13px;cursor:pointer}
+.btn-secondary:disabled{opacity:0.4;cursor:default}
+.guard-strip{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 13px;background:#f1f0fc;border:0.5px solid #c5c0ee;border-radius:8px}
+.guard-text{font-size:11.5px;color:#3c3489;line-height:1.5}
+.footer{text-align:center;padding:26px 16px 8px}
+.footer p{font-size:11px;color:#8a96ab;line-height:1.7}
+.footer strong{color:#3a5a9a}
+.nav-strip{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#fff;border-top:0.5px solid rgba(15,32,68,0.1)}
+.nav-link{font-size:11.5px;font-weight:600;color:#3a5a9a;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="hd">
+  <div><span class="badge green">Layer 10 of 11</span><span class="badge blue">Triggered by Layers 1, 2 &amp; 8</span></div>
+  <div class="hd-title">Assessment Management</div>
+  <div class="hd-sub">PIAs and DPIAs — automatically triggered, agent-drafted, human-approved · PrivacyCo dummy data</div>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="tabBiz" onclick="setView('biz')">Executive view</button>
+    <button class="toggle-btn" id="tabTech" onclick="setView('tech')">Technical run</button>
+  </div>
+</div>
+<div class="view active" id="viewBiz">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-val">4</div><div class="kpi-label">assessments in the register — PIAs and DPIAs</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:#791f1f">1</div><div class="kpi-label">overdue DPIA — health data collection never assessed</div></div>
+    <div class="kpi"><div class="kpi-val">1</div><div class="kpi-label">agent-drafted DPIA ready for DPO review today</div></div>
+    <div class="kpi"><div class="kpi-val">0</div><div class="kpi-label">days for agent to draft the DPIA after trigger — same day</div></div>
+  </div>
+  <div class="sec">Assessment register</div>
+  <div class="assess-card urgent"><div class="a-head"><span class="a-id">DPIA-001</span><span class="a-name">Health data in CRM — DPIA never completed</span><span class="a-tag at-urgent">OVERDUE</span></div><div class="a-body">Under GDPR Art. 35, a DPIA is mandatory before processing special category data. PrivacyCo began collecting health conditions in Salesforce with no DPIA ever conducted. The agent has drafted one retroactively — but it cannot substitute for prior assessment. This is a standalone compliance failure.</div><div class="a-deadline" style="color:#791f1f">Draft complete · DPO sign-off required immediately</div></div>
+  <div class="assess-card progress"><div class="a-head"><span class="a-id">PIA-001</span><span class="a-name">SharePoint document access controls — PIA</span><span class="a-tag at-prog">IN PROGRESS</span></div><div class="a-body">Triggered by Layer 1 finding: medical documents open to all staff. Agent drafted PIA framework — assessing risk of current access configuration and recommended controls.</div><div class="a-deadline" style="color:#1a3a6e">Due: 19 Jun 2026 · 7 days</div></div>
+  <div class="assess-card review"><div class="a-head"><span class="a-id">PIA-002</span><span class="a-name">Hotjar session recording — PIA review</span><span class="a-tag at-review">REVIEW</span></div><div class="a-body">Previous PIA conducted in 2024 did not account for consent revocation propagation. Agent flagged the gap — assessment must be updated to address the Tom Wallace incident.</div><div class="a-deadline" style="color:#8a5000">Due: 16 Jun 2026 · 4 days</div></div>
+  <div class="assess-card done"><div class="a-head"><span class="a-id">PIA-003</span><span class="a-name">Payroll data processing — Oracle HCM</span><span class="a-tag at-done">APPROVED</span></div><div class="a-body">Completed March 2024. Covered payroll data flows, third-party processor (Oracle), access controls, and retention. Next scheduled review: March 2027.</div><div class="a-deadline" style="color:#0a6647">Next review: Mar 2027</div></div>
+  <div class="sec">DPIA-001 — what the agent drafted</div>
+  <div class="dpia-card">
+    <div class="dpia-title">DPIA: Health data collection in Salesforce CRM (draft)</div>
+    <div class="dpia-section"><div class="dpia-label">Processing description</div><div class="dpia-content">Collection of health_condition field for 4 of 10 customers in Salesforce CRM. No data flow documentation exists. Data visible to all CRM users (approx. 12 staff).</div></div>
+    <div class="dpia-section"><div class="dpia-label">Necessity &amp; proportionality</div><div class="dpia-content">Agent assessment: FAILS. No legitimate purpose for health data in a sales CRM has been identified. Processing is neither necessary nor proportionate.</div></div>
+    <div class="dpia-section"><div class="dpia-label">Risk assessment</div><div class="dpia-content">High risk: unauthorised access by sales staff · no consent or alternative basis · potential discrimination risk · NDB and GDPR breach exposure. Risk score: 9.2/10 (Layer 8).</div></div>
+    <div class="dpia-section"><div class="dpia-label">Recommended measures</div><div class="dpia-content">1. Delete health_condition field (subject to DPO approval). 2. Notify affected individuals. 3. Restrict field creation in CRM to data governance team. 4. Audit all CRM access logs for 24 months.</div></div>
+    <div class="dpia-section"><div class="dpia-label">DPO consultation required</div><div class="dpia-content">Yes — GDPR Art. 36 requires prior consultation with the ICO given the high residual risk. Agent has pre-drafted the ICO consultation letter.</div></div>
+  </div>
+  <div class="assure"><span style="font-size:14px;flex-shrink:0">&#128737;&#65039;</span><div class="assure-text">The agent drafts assessments from the data already gathered in Layers 1–9. The DPO reviews, supplements with business context, and approves. Agent does the data work — human provides judgement and sign-off.</div></div>
+</div>
+<div class="view" id="viewTech">
+  <div class="agent-status">
+    <div class="status-row"><div class="status-dot" id="agentDot"></div><div><div class="status-label" id="agentLabel">Assessment agent — ready</div><div class="status-detail" id="agentDetail">Monitoring triggers: special category data · high risk scores · access anomalies · new data flows</div></div></div>
+  </div>
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Triggers</div><div class="metric-val" id="mTrig">0</div><div class="metric-sub">assessment required</div></div>
+    <div class="metric"><div class="metric-label">Drafted</div><div class="metric-val" id="mDraft">0</div><div class="metric-sub">ready for DPO</div></div>
+    <div class="metric"><div class="metric-label">Overdue</div><div class="metric-val" id="mOver" style="color:#791f1f">0</div><div class="metric-sub">never completed</div></div>
+    <div class="metric"><div class="metric-label">Approved</div><div class="metric-val" id="mAppr">0</div><div class="metric-sub">in register</div></div>
+  </div>
+  <div class="sec">Agent activity log</div>
+  <div id="feedWrap"><div class="empty" id="emptyFeed">Press Run agent to scan for assessment triggers</div></div>
+  <div class="output-card" id="outputCard">
+    <div class="output-row"><span>&#9888;&#65039;</span><div>DPIA-001 draft created — health data in CRM<div class="output-path">05_Assessments/DPIA_001_health_CRM_draft_2026-06-12.docx</div></div></div>
+    <div class="output-row"><span>&#9989;</span><div>PIA-001 draft created — SharePoint access<div class="output-path">05_Assessments/PIA_001_SharePoint_access_draft.docx</div></div></div>
+    <div class="output-row"><span>&#128203;</span><div>Audit trail written<div class="output-path">06_Audit_Log/agent_audit_log_scenario10.csv</div></div></div>
+  </div>
+  <div class="guard-strip"><span style="font-size:13px;flex-shrink:0">&#128274;</span><div class="guard-text">Agent drafts from gathered evidence — never approves · DPO reviews and signs off · approved assessments locked in version-controlled register</div></div>
+  <div class="controls">
+    <button class="btn-primary" id="btnRun" onclick="runAgent()">Run agent</button>
+    <button class="btn-secondary" id="btnReset" onclick="resetAgent()" disabled>Reset</button>
+  </div>
+</div>
+<div class="footer"><p><strong>Layer 10 of 11 — AI-Native Privacy Management Platform</strong><br>Using AI Agents in Privacy Operations with Governance Guardrails · Powered by MCP Protocol<br>PrivacyCo is a fictional company. All data is dummy data.</p></div>
+<div class="nav-strip"><a class="nav-link" href="platform-layer9-breach.html">&#8592; Layer 9</a><a class="nav-link" href="platform-layer11-governance.html">Layer 11 &#8594;</a></div>
+</div>
+<script>
+function setView(v){document.getElementById('viewBiz').className=v==='biz'?'view active':'view';document.getElementById('viewTech').className=v==='tech'?'view active':'view';document.getElementById('tabBiz').className=v==='biz'?'toggle-btn active':'toggle-btn';document.getElementById('tabTech').className=v==='tech'?'toggle-btn active':'toggle-btn'}
+var running=false;
+function delay(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function setN(id,v){document.getElementById(id).textContent=v}
+function setAgent(l,d,s){document.getElementById('agentLabel').textContent=l;document.getElementById('agentDetail').textContent=d;document.getElementById('agentDot').className='status-dot '+s}
+function addLog(type,text,meta){var w=document.getElementById('feedWrap');var e=document.getElementById('emptyFeed');if(e)e.remove();if(!w.querySelector('.feed-wrap')){var d=document.createElement('div');d.className='feed-wrap';w.appendChild(d)}var list=w.querySelector('.feed-wrap');var el=document.createElement('div');el.className='feed-item';el.innerHTML='<div class="feed-dot '+type+'"></div><div class="feed-text">'+text+'<div class="feed-meta">'+(meta||'')+'</div></div>';list.appendChild(el)}
+async function runAgent(){if(running)return;running=true;document.getElementById('btnRun').disabled=true;document.getElementById('btnReset').disabled=true;setAgent('Assessment agent — scanning for triggers','Checking special category data · high risk scores · missing assessments…','running');addLog('info','Ingesting findings from Layers 1–9','Data map · classification · risk register · DSR register · breach file');await delay(700);addLog('block','TRIGGER: special category data processed — no DPIA on record','health_condition in Salesforce CRM · GDPR Art. 35 requires DPIA · OVERDUE');setN('mTrig',1);setN('mOver',1);await delay(600);addLog('warn','TRIGGER: SharePoint medical documents open to all staff','PIA required for access control configuration');setN('mTrig',2);await delay(600);addLog('warn','TRIGGER: Hotjar PIA gap — consent revocation not covered','Existing 2024 PIA incomplete');setN('mTrig',3);await delay(600);addLog('ok','Existing: PIA-003 (Oracle HCM payroll) — approved Mar 2024','No trigger · next review Mar 2027');setN('mAppr',1);await delay(600);addLog('info','Drafting DPIA-001 — health data in CRM','Necessity & proportionality: FAILS · Risk: 9.2/10 · Recommended: immediate deletion');await delay(700);addLog('info','DPIA-001: adding ICO consultation draft','GDPR Art. 36 — prior consultation required · high residual risk');setN('mDraft',1);await delay(600);addLog('info','Drafting PIA-001 — SharePoint access controls','Recommended: restricted library permissions');setN('mDraft',2);await delay(600);addLog('warn','Flagging PIA-002 for review — Hotjar consent gap','Existing assessment insufficient');await delay(600);addLog('guard','All drafts held for DPO review and approval','Agent provides evidence-based drafts · human provides judgement and sign-off');document.getElementById('outputCard').className='output-card show';await delay(400);setAgent('Assessment agent complete','3 triggers · 2 drafts ready · 1 review flagged · 1 approved in register','done');addLog('ok','Handoff to Layer 11','DPIA-001 requires immediate DPO attention · combined with breach notification (Layer 9) and risk register (Layer 8)');document.getElementById('btnReset').disabled=false;running=false}
+function resetAgent(){running=false;['mTrig','mDraft','mOver','mAppr'].forEach(function(id){setN(id,0)});setAgent('Assessment agent — ready','Monitoring triggers: special category data · high risk scores · access anomalies','');document.getElementById('feedWrap').innerHTML='<div class="empty" id="emptyFeed">Press Run agent to scan for assessment triggers</div>';document.getElementById('outputCard').className='output-card';document.getElementById('btnRun').disabled=false;document.getElementById('btnReset').disabled=true}
+</script>
+</body>
+</html>

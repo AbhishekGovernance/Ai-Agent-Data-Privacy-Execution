@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer 8 — Risk & Compliance Monitoring | PrivacyCo AI Platform</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.page{max-width:520px;margin:0 auto;padding-bottom:40px}
+.hd{background:#0f2044;padding:22px 18px 16px}
+.badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px}
+.badge.green{background:rgba(29,143,110,0.25);color:#5dcaa5;border:0.5px solid rgba(93,202,165,0.3)}
+.badge.blue{background:rgba(59,125,216,0.2);color:#7ab0e8;border:0.5px solid rgba(59,125,216,0.3)}
+.hd-title{font-size:18px;font-weight:600;color:#fff;margin-top:8px}
+.hd-sub{font-size:12px;color:#9aaac8;margin-top:4px;line-height:1.5}
+.toggle-wrap{display:flex;gap:6px;background:rgba(255,255,255,0.08);border-radius:9px;padding:4px;margin-top:14px}
+.toggle-btn{flex:1;border:none;border-radius:6px;padding:9px 10px;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#9aaac8}
+.toggle-btn.active{background:#fff;color:#0f2044}
+.view{display:none;padding:16px}
+.view.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kpi{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:9px;padding:13px 14px}
+.kpi-val{font-size:24px;font-weight:600;color:#0f2044;line-height:1}
+.kpi-label{font-size:11px;color:#5f6b80;margin-top:5px;line-height:1.4}
+.sec{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8a96ab;padding:18px 0 8px}
+.posture-wrap{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px}
+.posture-score{font-size:40px;font-weight:700;color:#791f1f;line-height:1;flex-shrink:0}
+.posture-label{font-size:13px;font-weight:700;color:#791f1f;margin-bottom:4px}
+.posture-desc{font-size:11.5px;color:#5f6b80;line-height:1.5}
+.risk-card{border-radius:10px;padding:13px 14px;margin-bottom:8px;border:0.5px solid}
+.risk-card.critical{background:#fcebeb;border-color:#e24b4a}
+.risk-card.high{background:#fdf6e9;border-color:#d9a93f}
+.risk-card.medium{background:#eef4fd;border-color:#6f9fd8}
+.risk-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.risk-id{font-size:10px;font-family:ui-monospace,Menlo,monospace;color:#5f6b80;flex-shrink:0}
+.risk-name{font-size:12.5px;font-weight:600;color:#0f2044;flex:1}
+.risk-score{font-size:17px;font-weight:700;flex-shrink:0}
+.s-crit{color:#791f1f}.s-high{color:#8a5000}.s-med{color:#1a3a6e}
+.risk-meta{font-size:11.5px;color:#5f6b80;line-height:1.55}
+.risk-source{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.src-tag{font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(15,32,68,0.07);color:#5f6b80;font-weight:500}
+.panel{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.reg-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid rgba(15,32,68,0.08)}
+.reg-row:last-child{border-bottom:none}
+.reg-flag{font-size:15px;flex-shrink:0}
+.reg-name{font-size:12px;font-weight:600;color:#0f2044;flex:1}
+.reg-issues{font-size:10.5px;color:#5f6b80;margin-top:1px}
+.reg-bar-wrap{width:60px;height:10px;background:rgba(15,32,68,0.07);border-radius:3px;overflow:hidden;flex-shrink:0}
+.reg-bar{height:100%;border-radius:3px}
+.reg-pct{font-size:10.5px;font-weight:700;width:32px;text-align:right;flex-shrink:0}
+.assure{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:12px 14px;background:#eef8f4;border:0.5px solid #9dd4be;border-radius:9px}
+.assure-text{font-size:11.5px;color:#085041;line-height:1.6}
+.agent-status{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.status-row{display:flex;align-items:flex-start;gap:10px}
+.status-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px;background:#b4b2a9}
+.status-dot.running{background:#1d9e75;animation:pulse 1.2s infinite}
+.status-dot.done{background:#1d9e75}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.status-label{font-size:13px;font-weight:600;color:#0f2044}
+.status-detail{font-size:11px;color:#5f6b80;margin-top:3px;line-height:1.5}
+.metrics-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.metric{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:8px;padding:10px 12px}
+.metric-label{font-size:10px;color:#8a96ab;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:600;color:#0f2044;line-height:1}
+.metric-sub{font-size:10.5px;color:#8a96ab;margin-top:3px}
+.feed-wrap{border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;overflow:hidden;background:#fff}
+.feed-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:0.5px solid rgba(15,32,68,0.07);font-size:12px}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.feed-dot.ok{background:#1d9e75}.feed-dot.warn{background:#e8b44a}.feed-dot.info{background:#3b7dd8}.feed-dot.guard{background:#7f77dd}.feed-dot.block{background:#e24b4a}
+.feed-text{flex:1;color:#1a2a44;line-height:1.45}
+.feed-meta{font-size:10.5px;color:#8a96ab;margin-top:1px}
+.empty{padding:18px;text-align:center;color:#8a96ab;font-size:12px;background:#fff;border-radius:10px;border:0.5px solid rgba(15,32,68,0.1)}
+.output-card{display:none;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;background:#fff;padding:12px 14px;margin-top:8px}
+.output-card.show{display:block}
+.output-row{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:#1a2a44;padding:4px 0}
+.output-path{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#8a96ab}
+.controls{padding:14px 0 0;display:flex;gap:8px}
+.btn-primary{background:#0f2044;color:#fff;border:none;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;flex:1}
+.btn-primary:disabled{opacity:0.4;cursor:default}
+.btn-secondary{background:#fff;color:#0f2044;border:0.5px solid rgba(15,32,68,0.3);border-radius:8px;padding:12px 14px;font-size:13px;cursor:pointer}
+.btn-secondary:disabled{opacity:0.4;cursor:default}
+.guard-strip{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 13px;background:#f1f0fc;border:0.5px solid #c5c0ee;border-radius:8px}
+.guard-text{font-size:11.5px;color:#3c3489;line-height:1.5}
+.footer{text-align:center;padding:26px 16px 8px}
+.footer p{font-size:11px;color:#8a96ab;line-height:1.7}
+.footer strong{color:#3a5a9a}
+.nav-strip{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#fff;border-top:0.5px solid rgba(15,32,68,0.1)}
+.nav-link{font-size:11.5px;font-weight:600;color:#3a5a9a;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="hd">
+  <div><span class="badge green">Layer 8 of 11</span><span class="badge blue">Aggregates findings from Layers 1–7</span></div>
+  <div class="hd-title">Risk &amp; Compliance Monitoring</div>
+  <div class="hd-sub">Every finding scored, ranked, and tracked against regulation · PrivacyCo dummy data</div>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="tabBiz" onclick="setView('biz')">Executive view</button>
+    <button class="toggle-btn" id="tabTech" onclick="setView('tech')">Technical run</button>
+  </div>
+</div>
+<div class="view active" id="viewBiz">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-val" style="color:#791f1f">2</div><div class="kpi-label">critical risks — regulatory action possible</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:#8a5000">4</div><div class="kpi-label">high risks — elevated exposure requiring prompt action</div></div>
+    <div class="kpi"><div class="kpi-val">3</div><div class="kpi-label">medium risks — monitored with remediation scheduled</div></div>
+    <div class="kpi"><div class="kpi-val">58</div><div class="kpi-label">overall privacy risk score — elevated (target: below 30)</div></div>
+  </div>
+  <div class="sec">Overall risk posture</div>
+  <div class="posture-wrap">
+    <div class="posture-score">58</div>
+    <div><div class="posture-label">ELEVATED — action required</div><div class="posture-desc">Score driven by two critical items: unlawful health data collection and Hotjar consent violation — both attributable to the Tom Wallace case. Resolving these two items alone would reduce the score to approximately 28, within target.</div></div>
+  </div>
+  <div class="sec">Risk register — critical and high</div>
+  <div class="risk-card critical">
+    <div class="risk-head"><span class="risk-id">RSK-001</span><span class="risk-name">Health data in CRM — no lawful basis</span><span class="risk-score s-crit">9.2/10</span></div>
+    <div class="risk-meta">Health_condition held for 4 customers with no consent, no contract basis, no legitimate interest. Every day it is held is an ongoing breach of APP 3, APP 5, and GDPR Art. 9.</div>
+    <div class="risk-source"><span class="src-tag">Layer 1</span><span class="src-tag">Layer 2</span><span class="src-tag">Layer 3</span><span class="src-tag">Layer 7</span></div>
+  </div>
+  <div class="risk-card critical">
+    <div class="risk-head"><span class="risk-id">RSK-002</span><span class="risk-name">Hotjar recording Tom Wallace post-revocation</span><span class="risk-score s-crit">8.8/10</span></div>
+    <div class="risk-meta">25 days of unlawful session recording after explicit consent revocation. Combined with overdue DSR and health data exposure, the Tom Wallace case is the single highest-risk cluster in the portfolio.</div>
+    <div class="risk-source"><span class="src-tag">Layer 3</span><span class="src-tag">Layer 4</span><span class="src-tag">Layer 6</span></div>
+  </div>
+  <div class="risk-card high">
+    <div class="risk-head"><span class="risk-id">RSK-003</span><span class="risk-name">DSR-009 overdue — 4 days to statutory deadline</span><span class="risk-score s-high">7.5/10</span></div>
+    <div class="risk-meta">Missing a statutory DSR deadline is a direct compliance failure and grounds for a complaint to the regulator. Clock running — DPO must act by 16 June.</div>
+    <div class="risk-source"><span class="src-tag">Layer 6</span></div>
+  </div>
+  <div class="risk-card high">
+    <div class="risk-head"><span class="risk-id">RSK-004</span><span class="risk-name">Medical documents open to all staff</span><span class="risk-score s-high">7.1/10</span></div>
+    <div class="risk-meta">Medical certificate and complaint email in SharePoint accessible to all staff. Unlawful access to special category data by staff with no need to know — APP 11, GDPR Art. 32.</div>
+    <div class="risk-source"><span class="src-tag">Layer 1</span><span class="src-tag">Layer 2</span><span class="src-tag">Layer 4</span></div>
+  </div>
+  <div class="risk-card high">
+    <div class="risk-head"><span class="risk-id">RSK-005</span><span class="risk-name">Consent banner non-compliant — 2 failures</span><span class="risk-score s-high">6.2/10</span></div>
+    <div class="risk-meta">Reject all not equally prominent; non-essential cookies fire before consent recorded. These are the two most commonly enforced GDPR cookie violations. Immediate web team remediation required.</div>
+    <div class="risk-source"><span class="src-tag">Layer 4</span></div>
+  </div>
+  <div class="risk-card high">
+    <div class="risk-head"><span class="risk-id">RSK-006</span><span class="risk-name">Passport scan retained beyond 7-year limit</span><span class="risk-score s-high">5.8/10</span></div>
+    <div class="risk-meta">EMP-005 passport copy held 7 years 2 months. Identity documents held beyond necessity are a named risk in OAIC regulatory guidance.</div>
+    <div class="risk-source"><span class="src-tag">Layer 7</span></div>
+  </div>
+  <div class="sec">Regulatory compliance scores</div>
+  <div class="panel">
+    <div class="reg-row"><span class="reg-flag">&#127462;&#127482;</span><div style="flex:1;min-width:0"><div class="reg-name">AU Privacy Act — APPs</div><div class="reg-issues">4 APP breaches identified</div></div><div class="reg-bar-wrap"><div class="reg-bar" style="width:62%;background:#d99a2b"></div></div><div class="reg-pct" style="color:#8a5000">62%</div></div>
+    <div class="reg-row"><span class="reg-flag">&#127468;&#127463;</span><div style="flex:1;min-width:0"><div class="reg-name">UK/EU GDPR</div><div class="reg-issues">Art. 7, 9, 13, 17, 32 items open</div></div><div class="reg-bar-wrap"><div class="reg-bar" style="width:58%;background:#d99a2b"></div></div><div class="reg-pct" style="color:#8a5000">58%</div></div>
+    <div class="reg-row"><span class="reg-flag">&#127482;&#127480;</span><div style="flex:1;min-width:0"><div class="reg-name">CCPA/CPRA</div><div class="reg-issues">Opt-out not fully honoured</div></div><div class="reg-bar-wrap"><div class="reg-bar" style="width:74%;background:#1d9e75"></div></div><div class="reg-pct" style="color:#0a6647">74%</div></div>
+    <div class="reg-row"><span class="reg-flag">&#127471;&#127477;</span><div style="flex:1;min-width:0"><div class="reg-name">Japan APPI</div><div class="reg-issues">Notice update pending</div></div><div class="reg-bar-wrap"><div class="reg-bar" style="width:80%;background:#1d9e75"></div></div><div class="reg-pct" style="color:#0a6647">80%</div></div>
+  </div>
+  <div class="assure"><span style="font-size:14px;flex-shrink:0">&#128737;&#65039;</span><div class="assure-text">Risk scores are calculated continuously as findings come in from Layers 1–7. The agent quantifies, prioritises, and escalates. Remediation decisions belong to the DPO and legal team at Layer 11.</div></div>
+</div>
+<div class="view" id="viewTech">
+  <div class="agent-status">
+    <div class="status-row"><div class="status-dot" id="agentDot"></div><div><div class="status-label" id="agentLabel">Risk monitoring agent — ready</div><div class="status-detail" id="agentDetail">Continuous monitoring · ingesting findings from Layers 1–7 · scoring against 4 regulatory frameworks</div></div></div>
+  </div>
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Findings ingested</div><div class="metric-val" id="mFind">0</div><div class="metric-sub">from Layers 1–7</div></div>
+    <div class="metric"><div class="metric-label">Risk items</div><div class="metric-val" id="mRisk">0</div><div class="metric-sub">scored and ranked</div></div>
+    <div class="metric"><div class="metric-label">Risk score</div><div class="metric-val" id="mScore" style="color:#791f1f">0</div><div class="metric-sub">target: below 30</div></div>
+    <div class="metric"><div class="metric-label">Escalated</div><div class="metric-val" id="mEsc">0</div><div class="metric-sub">to DPO / Layer 11</div></div>
+  </div>
+  <div class="sec">Agent activity log</div>
+  <div id="feedWrap"><div class="empty" id="emptyFeed">Press Run monitor to aggregate and score all findings</div></div>
+  <div class="output-card" id="outputCard">
+    <div class="output-row"><span>&#9989;</span><div>Risk register saved<div class="output-path">04_Risk_Register/risk_register_2026-06-12.csv</div></div></div>
+    <div class="output-row"><span>&#9888;&#65039;</span><div>2 critical risks escalated to DPO with evidence packages<div class="output-path">RSK-001 (health data) · RSK-002 (Hotjar / Tom Wallace)</div></div></div>
+    <div class="output-row"><span>&#128203;</span><div>Audit trail written<div class="output-path">06_Audit_Log/agent_audit_log_scenario8.csv</div></div></div>
+  </div>
+  <div class="guard-strip"><span style="font-size:13px;flex-shrink:0">&#128274;</span><div class="guard-text">Agent scores and escalates — never remediates · all critical findings sent to Layer 11 with evidence · risk scores recalculate in real time as findings resolve</div></div>
+  <div class="controls">
+    <button class="btn-primary" id="btnRun" onclick="runMonitor()">Run monitor</button>
+    <button class="btn-secondary" id="btnReset" onclick="resetMonitor()" disabled>Reset</button>
+  </div>
+</div>
+<div class="footer"><p><strong>Layer 8 of 11 — AI-Native Privacy Management Platform</strong><br>Using AI Agents in Privacy Operations with Governance Guardrails · Powered by MCP Protocol<br>PrivacyCo is a fictional company. All data is dummy data.</p></div>
+<div class="nav-strip"><a class="nav-link" href="platform-layer7-retention.html">&#8592; Layer 7</a><a class="nav-link" href="platform-layer9-breach.html">Layer 9 &#8594;</a></div>
+</div>
+<script>
+function setView(v){document.getElementById('viewBiz').className=v==='biz'?'view active':'view';document.getElementById('viewTech').className=v==='tech'?'view active':'view';document.getElementById('tabBiz').className=v==='biz'?'toggle-btn active':'toggle-btn';document.getElementById('tabTech').className=v==='tech'?'toggle-btn active':'toggle-btn'}
+var findings=[{t:'block',txt:'Layer 1+2+3+7: health data in CRM — no lawful basis',sc:9.2,id:'RSK-001'},{t:'block',txt:'Layer 3+4+6: Hotjar recording CRM-009 post-revocation',sc:8.8,id:'RSK-002'},{t:'warn',txt:'Layer 6: DSR-009 4 days from statutory deadline',sc:7.5,id:'RSK-003'},{t:'warn',txt:'Layer 1+2+4: medical documents open to all staff',sc:7.1,id:'RSK-004'},{t:'warn',txt:'Layer 4: consent banner 2 failures',sc:6.2,id:'RSK-005'},{t:'warn',txt:'Layer 7: passport scan past 7-year retention limit',sc:5.8,id:'RSK-006'},{t:'info',txt:'Layer 2: 3 classification items below confidence threshold',sc:3.5,id:'RSK-007'},{t:'info',txt:'Layer 5: privacy notice v4 pending DPO approval',sc:2.8,id:'RSK-008'},{t:'info',txt:'Layer 7: 3 employee onboarding records approaching limit',sc:2.1,id:'RSK-009'}];
+var running=false;
+function delay(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function setN(id,v){document.getElementById(id).textContent=v}
+function setAgent(l,d,s){document.getElementById('agentLabel').textContent=l;document.getElementById('agentDetail').textContent=d;document.getElementById('agentDot').className='status-dot '+s}
+function addLog(type,text,meta){var w=document.getElementById('feedWrap');var e=document.getElementById('emptyFeed');if(e)e.remove();if(!w.querySelector('.feed-wrap')){var d=document.createElement('div');d.className='feed-wrap';w.appendChild(d)}var list=w.querySelector('.feed-wrap');var el=document.createElement('div');el.className='feed-item';el.innerHTML='<div class="feed-dot '+type+'"></div><div class="feed-text">'+text+'<div class="feed-meta">'+(meta||'')+'</div></div>';list.appendChild(el)}
+async function runMonitor(){if(running)return;running=true;document.getElementById('btnRun').disabled=true;document.getElementById('btnReset').disabled=true;setAgent('Risk agent — initialising','Ingesting findings from Layers 1–7…','running');addLog('info','Risk framework loaded','Scoring: likelihood x impact x regulatory weight · 4 frameworks');await delay(700);var score=0,risk=0,find=0,esc=0;for(var i=0;i<findings.length;i++){var f=findings[i];find++;risk++;score=Math.min(58,Math.round(score+(f.sc*1.1)));addLog(f.t,f.id+': '+f.txt,'Risk score: '+f.sc+'/10');setN('mFind',find);setN('mRisk',risk);setN('mScore',score);if(f.sc>=8){esc++;setN('mEsc',esc)}await delay(450)}setN('mScore',58);await delay(500);addLog('block','2 critical risks escalated to DPO with full evidence packages','RSK-001 (health data) · RSK-002 (Hotjar/CRM-009) · combined case file prepared');await delay(600);addLog('info','Regulatory compliance scores calculated','AU 62% · GDPR 58% · CCPA 74% · JP APPI 80%');await delay(600);document.getElementById('outputCard').className='output-card show';await delay(400);setAgent('Risk monitor complete','9 findings · 6 risks scored · score: 58 (elevated) · 2 critical escalated','done');addLog('ok','Handoff','Critical risks pre-filed for Layer 9 (Breach) · all risks feed Layer 10 (Assessments) · summary to Layer 11');document.getElementById('btnReset').disabled=false;running=false}
+function resetMonitor(){running=false;['mFind','mRisk','mScore','mEsc'].forEach(function(id){setN(id,0)});setAgent('Risk monitoring agent — ready','Continuous monitoring · ingesting findings from Layers 1–7','');document.getElementById('feedWrap').innerHTML='<div class="empty" id="emptyFeed">Press Run monitor to aggregate and score all findings</div>';document.getElementById('outputCard').className='output-card';document.getElementById('btnRun').disabled=false;document.getElementById('btnReset').disabled=true}
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer 5 — Privacy Notice Management | PrivacyCo AI Platform</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.page{max-width:520px;margin:0 auto;padding-bottom:40px}
+.hd{background:#0f2044;padding:22px 18px 16px}
+.badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px}
+.badge.green{background:rgba(29,143,110,0.25);color:#5dcaa5;border:0.5px solid rgba(93,202,165,0.3)}
+.badge.blue{background:rgba(59,125,216,0.2);color:#7ab0e8;border:0.5px solid rgba(59,125,216,0.3)}
+.hd-title{font-size:18px;font-weight:600;color:#fff;margin-top:8px}
+.hd-sub{font-size:12px;color:#9aaac8;margin-top:4px;line-height:1.5}
+.toggle-wrap{display:flex;gap:6px;background:rgba(255,255,255,0.08);border-radius:9px;padding:4px;margin-top:14px}
+.toggle-btn{flex:1;border:none;border-radius:6px;padding:9px 10px;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#9aaac8}
+.toggle-btn.active{background:#fff;color:#0f2044}
+.view{display:none;padding:16px}
+.view.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kpi{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:9px;padding:13px 14px}
+.kpi-val{font-size:24px;font-weight:600;color:#0f2044;line-height:1}
+.kpi-label{font-size:11px;color:#5f6b80;margin-top:5px;line-height:1.4}
+.sec{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8a96ab;padding:18px 0 8px}
+.panel{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.trigger-item{padding:9px 0;border-bottom:0.5px solid rgba(15,32,68,0.08)}
+.trigger-item:last-child{border-bottom:none}
+.trigger-head{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.trigger-tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.t-auto{background:#e1f5ee;color:#0a6647}.t-human{background:#fff3e0;color:#8a5000}
+.trigger-name{font-size:12.5px;font-weight:600;color:#0f2044}
+.trigger-desc{font-size:11.5px;color:#5f6b80;line-height:1.5}
+.version-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid rgba(15,32,68,0.08)}
+.version-row:last-child{border-bottom:none}
+.ver-num{font-size:12px;font-weight:700;color:#0f2044;width:32px;flex-shrink:0}
+.ver-date{font-size:11px;color:#5f6b80;width:82px;flex-shrink:0}
+.ver-desc{font-size:11px;color:#5f6b80;flex:1;line-height:1.4}
+.ver-status{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.vs-live{background:#e1f5ee;color:#0a6647}.vs-arch{background:rgba(15,32,68,0.07);color:#5f6b80}.vs-draft{background:#fff3e0;color:#8a5000}
+.draft-card{background:#eef4fd;border:0.5px solid #6f9fd8;border-radius:10px;padding:13px 14px}
+.draft-title{font-size:13px;font-weight:600;color:#1a3a6e;margin-bottom:8px}
+.draft-change{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:0.5px solid rgba(40,80,150,0.15);font-size:12px;color:#1f3354;line-height:1.5}
+.draft-change:first-of-type{padding-top:0}
+.draft-change:last-child{border-bottom:none}
+.change-tag{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(40,80,150,0.1);color:#1a3a6e;flex-shrink:0;margin-top:1px}
+.jur-row{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:0.5px solid rgba(15,32,68,0.08)}
+.jur-row:last-child{border-bottom:none}
+.jur-flag{font-size:15px;flex-shrink:0;margin-top:1px}
+.jur-name{font-size:12.5px;font-weight:600;color:#0f2044}
+.jur-desc{font-size:11px;color:#5f6b80;line-height:1.5;margin-top:1px}
+.jur-status{margin-left:auto;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.assure{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:12px 14px;background:#eef8f4;border:0.5px solid #9dd4be;border-radius:9px}
+.assure-text{font-size:11.5px;color:#085041;line-height:1.6}
+.agent-status{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.status-row{display:flex;align-items:flex-start;gap:10px}
+.status-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px;background:#b4b2a9}
+.status-dot.running{background:#1d9e75;animation:pulse 1.2s infinite}
+.status-dot.done{background:#1d9e75}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.status-label{font-size:13px;font-weight:600;color:#0f2044}
+.status-detail{font-size:11px;color:#5f6b80;margin-top:3px;line-height:1.5}
+.metrics-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.metric{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:8px;padding:10px 12px}
+.metric-label{font-size:10px;color:#8a96ab;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:600;color:#0f2044;line-height:1}
+.metric-sub{font-size:10.5px;color:#8a96ab;margin-top:3px}
+.feed-wrap{border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;overflow:hidden;background:#fff}
+.feed-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:0.5px solid rgba(15,32,68,0.07);font-size:12px}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.feed-dot.ok{background:#1d9e75}.feed-dot.warn{background:#e8b44a}.feed-dot.info{background:#3b7dd8}.feed-dot.guard{background:#7f77dd}
+.feed-text{flex:1;color:#1a2a44;line-height:1.45}
+.feed-meta{font-size:10.5px;color:#8a96ab;margin-top:1px}
+.empty{padding:18px;text-align:center;color:#8a96ab;font-size:12px;background:#fff;border-radius:10px;border:0.5px solid rgba(15,32,68,0.1)}
+.output-card{display:none;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;background:#fff;padding:12px 14px;margin-top:8px}
+.output-card.show{display:block}
+.output-row{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:#1a2a44;padding:4px 0}
+.output-path{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#8a96ab}
+.controls{padding:14px 0 0;display:flex;gap:8px}
+.btn-primary{background:#0f2044;color:#fff;border:none;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;flex:1}
+.btn-primary:disabled{opacity:0.4;cursor:default}
+.btn-secondary{background:#fff;color:#0f2044;border:0.5px solid rgba(15,32,68,0.3);border-radius:8px;padding:12px 14px;font-size:13px;cursor:pointer}
+.btn-secondary:disabled{opacity:0.4;cursor:default}
+.guard-strip{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 13px;background:#f1f0fc;border:0.5px solid #c5c0ee;border-radius:8px}
+.guard-text{font-size:11.5px;color:#3c3489;line-height:1.5}
+.footer{text-align:center;padding:26px 16px 8px}
+.footer p{font-size:11px;color:#8a96ab;line-height:1.7}
+.footer strong{color:#3a5a9a}
+.nav-strip{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#fff;border-top:0.5px solid rgba(15,32,68,0.1)}
+.nav-link{font-size:11.5px;font-weight:600;color:#3a5a9a;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="hd">
+  <div><span class="badge green">Layer 5 of 11</span><span class="badge blue">Triggered by Layers 1, 3 &amp; 4</span></div>
+  <div class="hd-title">Privacy Notice Management</div>
+  <div class="hd-sub">When must our notice change, what changes, and how does it get published · PrivacyCo dummy data</div>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="tabBiz" onclick="setView('biz')">Executive view</button>
+    <button class="toggle-btn" id="tabTech" onclick="setView('tech')">Technical run</button>
+  </div>
+</div>
+
+<div class="view active" id="viewBiz">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-val">3</div><div class="kpi-label">trigger events detected requiring a notice update</div></div>
+    <div class="kpi"><div class="kpi-val">v4</div><div class="kpi-label">draft notice version created and sent for approval</div></div>
+    <div class="kpi"><div class="kpi-val">4</div><div class="kpi-label">jurisdictions covered in the updated notice</div></div>
+    <div class="kpi"><div class="kpi-val">0</div><div class="kpi-label">days between trigger and draft — agent acted same day</div></div>
+  </div>
+  <div class="sec">What triggered a notice update</div>
+  <div class="panel">
+    <div class="trigger-item"><div class="trigger-head"><span class="trigger-tag t-auto">AUTO-DETECTED</span><span class="trigger-name">New data flow — health data in CRM</span></div><div class="trigger-desc">Layer 1 found health_condition in Salesforce. Current notice (v3) does not disclose health data collection. Material change requires notice update under APP 5 and GDPR Art. 13.</div></div>
+    <div class="trigger-item"><div class="trigger-head"><span class="trigger-tag t-auto">AUTO-DETECTED</span><span class="trigger-name">New tracking technology — Meta Pixel added</span></div><div class="trigger-desc">Layer 4 found Meta Pixel firing. v3 does not name Meta as a third-party recipient. Must be disclosed before the pixel can lawfully operate.</div></div>
+    <div class="trigger-item"><div class="trigger-head"><span class="trigger-tag t-human">HUMAN-RAISED</span><span class="trigger-name">Privacy_Policy_v3_Draft.docx found in SharePoint</span></div><div class="trigger-desc">Layer 1 discovered an unapproved draft. Agent detected version conflict — a human had been drafting changes outside the platform. Flagged for consolidation before v4 is published.</div></div>
+  </div>
+  <div class="sec">What is changing in version 4</div>
+  <div class="draft-card">
+    <div class="draft-title">Privacy Notice v4 — draft changes (awaiting DPO approval)</div>
+    <div class="draft-change"><span class="change-tag">ADD</span>Disclosure of health_condition field — basis, purpose, and deletion commitment</div>
+    <div class="draft-change"><span class="change-tag">ADD</span>Meta (Facebook) named as third-party data recipient for browsing analytics</div>
+    <div class="draft-change"><span class="change-tag">ADD</span>Hotjar session recording disclosed — with opt-out mechanism linked</div>
+    <div class="draft-change"><span class="change-tag">UPDATE</span>Data retention for customer contact data: 3 years to 2 years (aligns with consent refresh policy)</div>
+    <div class="draft-change"><span class="change-tag">UPDATE</span>DSR response timeframe clarified — 30 days standard, 45 days complex</div>
+    <div class="draft-change"><span class="change-tag">REMOVE</span>Reference to Google Universal Analytics (deprecated — GA4 confirmed but old reference not removed)</div>
+  </div>
+  <div class="sec">Jurisdiction coverage in v4</div>
+  <div class="panel">
+    <div class="jur-row"><span class="jur-flag">&#127462;&#127482;</span><div style="flex:1;min-width:0"><div class="jur-name">Australia — Privacy Act, APPs</div><div class="jur-desc">APP 1 (open and transparent) · APP 5 (notification) · health data disclosure</div></div><span class="jur-status vs-live">UPDATED</span></div>
+    <div class="jur-row"><span class="jur-flag">&#127468;&#127463;</span><div style="flex:1;min-width:0"><div class="jur-name">UK GDPR</div><div class="jur-desc">Art. 13/14 — information to be provided · Art. 9 — special category basis</div></div><span class="jur-status vs-live">UPDATED</span></div>
+    <div class="jur-row"><span class="jur-flag">&#127482;&#127480;</span><div style="flex:1;min-width:0"><div class="jur-name">California — CCPA/CPRA</div><div class="jur-desc">Categories of PI collected · third party sharing · opt-out rights</div></div><span class="jur-status vs-live">UPDATED</span></div>
+    <div class="jur-row"><span class="jur-flag">&#127471;&#127477;</span><div style="flex:1;min-width:0"><div class="jur-name">Japan — APPI</div><div class="jur-desc">Purpose of use notification · third party provision</div></div><span class="jur-status vs-draft">DRAFT</span></div>
+  </div>
+  <div class="sec">Version history</div>
+  <div class="panel">
+    <div class="version-row"><div class="ver-num">v4</div><div class="ver-date">12 Jun 2026</div><div class="ver-desc">Health data, Meta Pixel, Hotjar disclosures added</div><span class="ver-status vs-draft">DRAFT</span></div>
+    <div class="version-row"><div class="ver-num">v3</div><div class="ver-date">10 Jan 2026</div><div class="ver-desc">GA4 migration, updated DSR contacts</div><span class="ver-status vs-live">LIVE</span></div>
+    <div class="version-row"><div class="ver-num">v2</div><div class="ver-date">03 Mar 2025</div><div class="ver-desc">Cookie policy integrated, CCPA added</div><span class="ver-status vs-arch">ARCHIVED</span></div>
+    <div class="version-row"><div class="ver-num">v1</div><div class="ver-date">15 Jun 2023</div><div class="ver-desc">Original policy at platform launch</div><span class="ver-status vs-arch">ARCHIVED</span></div>
+  </div>
+  <div class="assure"><span style="font-size:14px;flex-shrink:0">&#128737;&#65039;</span><div class="assure-text">The agent drafts — it does not publish. v4 requires DPO sign-off before going live. Every prior version is archived with its exact publication date so consent records can always be matched to the notice version in force at the time.</div></div>
+</div>
+
+<div class="view" id="viewTech">
+  <div class="agent-status">
+    <div class="status-row"><div class="status-dot" id="agentDot"></div><div><div class="status-label" id="agentLabel">Notice management agent — ready</div><div class="status-detail" id="agentDetail">Current live notice: v3 (10 Jan 2026) · monitoring for trigger events from Layers 1–4</div></div></div>
+  </div>
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Triggers</div><div class="metric-val" id="mTrig">0</div><div class="metric-sub">requiring update</div></div>
+    <div class="metric"><div class="metric-label">Changes drafted</div><div class="metric-val" id="mChg">0</div><div class="metric-sub">in v4</div></div>
+    <div class="metric"><div class="metric-label">Jurisdictions</div><div class="metric-val" id="mJur">0</div><div class="metric-sub">sections updated</div></div>
+    <div class="metric"><div class="metric-val" id="mStatus" style="font-size:13px;margin-top:4px">—</div><div class="metric-sub">publication stage</div></div>
+  </div>
+  <div class="sec">Agent activity log</div>
+  <div id="feedWrap"><div class="empty" id="emptyFeed">Press Run agent to detect triggers and draft v4</div></div>
+  <div class="output-card" id="outputCard">
+    <div class="output-row"><span>&#9989;</span><div>Privacy Notice v4 draft created<div class="output-path">05_Assessments/privacy_notice_v4_draft_2026-06-12.docx</div></div></div>
+    <div class="output-row"><span>&#128100;</span><div>Sent to DPO for approval — deadline 19 Jun 2026<div class="output-path">Approval workflow: notice_approval_v4.csv</div></div></div>
+    <div class="output-row"><span>&#128203;</span><div>Audit trail written<div class="output-path">06_Audit_Log/agent_audit_log_scenario5.csv</div></div></div>
+  </div>
+  <div class="guard-strip"><span style="font-size:13px;flex-shrink:0">&#128274;</span><div class="guard-text">Agent drafts and flags — DPO approves before publication · every version archived with timestamp · consent records linked to notice version in force at collection</div></div>
+  <div class="controls">
+    <button class="btn-primary" id="btnRun" onclick="runAgent()">Run agent</button>
+    <button class="btn-secondary" id="btnReset" onclick="resetAgent()" disabled>Reset</button>
+  </div>
+</div>
+
+<div class="footer"><p><strong>Layer 5 of 11 — AI-Native Privacy Management Platform</strong><br>Using AI Agents in Privacy Operations with Governance Guardrails · Powered by MCP Protocol<br>PrivacyCo is a fictional company. All data is dummy data.</p></div>
+<div class="nav-strip"><a class="nav-link" href="platform-layer4-cookie-tracking.html">&#8592; Layer 4</a><a class="nav-link" href="platform-layer6-dsr.html">Layer 6 &#8594;</a></div>
+</div>
+<script>
+function setView(v){document.getElementById('viewBiz').className=v==='biz'?'view active':'view';document.getElementById('viewTech').className=v==='tech'?'view active':'view';document.getElementById('tabBiz').className=v==='biz'?'toggle-btn active':'toggle-btn';document.getElementById('tabTech').className=v==='tech'?'toggle-btn active':'toggle-btn'}
+var running=false;
+function delay(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function setN(id,v){document.getElementById(id).textContent=v}
+function setAgent(l,d,s){document.getElementById('agentLabel').textContent=l;document.getElementById('agentDetail').textContent=d;document.getElementById('agentDot').className='status-dot '+s}
+function addLog(type,text,meta){var w=document.getElementById('feedWrap');var e=document.getElementById('emptyFeed');if(e)e.remove();if(!w.querySelector('.feed-wrap')){var d=document.createElement('div');d.className='feed-wrap';w.appendChild(d)}var list=w.querySelector('.feed-wrap');var el=document.createElement('div');el.className='feed-item';el.innerHTML='<div class="feed-dot '+type+'"></div><div class="feed-text">'+text+'<div class="feed-meta">'+(meta||'')+'</div></div>';list.appendChild(el)}
+async function runAgent(){if(running)return;running=true;document.getElementById('btnRun').disabled=true;document.getElementById('btnReset').disabled=true;setAgent('Notice agent — initialising','Loading current notice v3 and monitoring feed from Layers 1–4…','running');addLog('info','Current live notice: Privacy Policy v3','Published 10 Jan 2026 · 4 jurisdictions');await delay(700);addLog('info','Scanning for trigger events','Comparing v3 disclosure scope against Layer 1–4 findings…');await delay(800);addLog('warn','TRIGGER 1: health_condition field not disclosed in v3','Layer 1 finding · APP 5 and GDPR Art. 13 require disclosure · material change');setN('mTrig',1);await delay(600);addLog('warn','TRIGGER 2: Meta Pixel not named as third-party recipient','Layer 4 finding · third-party sharing must be disclosed before processing');setN('mTrig',2);await delay(600);addLog('warn','TRIGGER 3: version conflict — unapproved draft found in SharePoint','Privacy_Policy_v3_Draft.docx · human-authored outside platform · flagged for consolidation');setN('mTrig',3);await delay(700);setAgent('Drafting v4','Generating changes for each trigger across all 4 jurisdictions…','running');for(var i=1;i<=6;i++){addLog('info','Drafting change '+i,'');setN('mChg',i);await delay(500)}setN('mJur',4);await delay(700);addLog('guard','v4 draft complete — sent to DPO for approval','Agent does not publish · DPO sign-off required · deadline: 19 Jun 2026');setN('mStatus','DRAFT');document.getElementById('outputCard').className='output-card show';await delay(400);setAgent('Notice agent complete','3 triggers · 6 changes drafted · 4 jurisdictions updated · v4 awaiting DPO approval','done');addLog('ok','Handoff','v4 notice version locked — will be referenced by consent records (Layer 3), DSR responses (Layer 6), and audit log (Layer 11)');document.getElementById('btnReset').disabled=false;running=false}
+function resetAgent(){running=false;['mTrig','mChg','mJur'].forEach(function(id){setN(id,0)});setN('mStatus','—');setAgent('Notice management agent — ready','Current live notice: v3 (10 Jan 2026) · monitoring for trigger events from Layers 1–4','');document.getElementById('feedWrap').innerHTML='<div class="empty" id="emptyFeed">Press Run agent to detect triggers and draft v4</div>';document.getElementById('outputCard').className='output-card';document.getElementById('btnRun').disabled=false;document.getElementById('btnReset').disabled=true}
+</script>
+</body>
+</html>

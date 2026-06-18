@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer 11 — Governance & Audit | PrivacyCo AI Platform</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.page{max-width:520px;margin:0 auto;padding-bottom:40px}
+.hd{background:#0f2044;padding:22px 18px 16px}
+.badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px}
+.badge.gold{background:rgba(200,146,42,0.25);color:#e8b44a;border:0.5px solid rgba(200,146,42,0.4)}
+.badge.blue{background:rgba(59,125,216,0.2);color:#7ab0e8;border:0.5px solid rgba(59,125,216,0.3)}
+.hd-title{font-size:18px;font-weight:600;color:#fff;margin-top:8px}
+.hd-sub{font-size:12px;color:#9aaac8;margin-top:4px;line-height:1.5}
+.toggle-wrap{display:flex;gap:6px;background:rgba(255,255,255,0.08);border-radius:9px;padding:4px;margin-top:14px}
+.toggle-btn{flex:1;border:none;border-radius:6px;padding:9px 10px;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#9aaac8}
+.toggle-btn.active{background:#fff;color:#0f2044}
+.view{display:none;padding:16px}
+.view.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kpi{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:9px;padding:13px 14px}
+.kpi-val{font-size:24px;font-weight:600;color:#0f2044;line-height:1}
+.kpi-label{font-size:11px;color:#5f6b80;margin-top:5px;line-height:1.4}
+.sec{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8a96ab;padding:18px 0 8px}
+.human-banner{background:linear-gradient(135deg,#fff3d4,#ffe8a0);border:1px solid #c8922a;border-radius:10px;padding:14px;margin-bottom:12px;text-align:center}
+.hb-icon{font-size:24px;margin-bottom:6px}
+.hb-title{font-size:13px;font-weight:700;color:#6e4400}
+.hb-desc{font-size:11.5px;color:#8a5500;margin-top:4px;line-height:1.5}
+.action-card{border-radius:10px;padding:13px 14px;margin-bottom:8px;border:0.5px solid;transition:box-shadow 0.15s}
+.action-card.crit{background:#fcebeb;border-color:#e24b4a}
+.action-card.high{background:#fdf6e9;border-color:#d9a93f}
+.action-card.med{background:#eef4fd;border-color:#6f9fd8}
+.action-card.done{background:#f3fbf8;border-color:#1d9e75;opacity:0.8}
+.ac-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ac-tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.t-crit{background:#fcebeb;color:#791f1f}.t-high{background:#fff3e0;color:#8a5000}.t-med{background:#e6effe;color:#1a3580}.t-done{background:#e1f5ee;color:#0a6647}
+.ac-name{font-size:12.5px;font-weight:600;color:#0f2044;flex:1}
+.ac-deadline{font-size:10.5px;font-weight:700;flex-shrink:0}
+.d-red{color:#791f1f}.d-amber{color:#8a5000}.d-green{color:#0a6647}
+.ac-body{font-size:12px;color:#5f6b80;line-height:1.6;margin-bottom:8px}
+.ac-btns{display:flex;gap:6px;flex-wrap:wrap}
+.ac-btn{font-size:11px;font-weight:600;padding:5px 10px;border-radius:5px;border:none;cursor:pointer}
+.btn-approve{background:#0f2044;color:#fff}
+.btn-review{background:#fff3e0;color:#8a5000;border:0.5px solid #d9a93f}
+.btn-view{background:rgba(15,32,68,0.07);color:#0f2044;border:0.5px solid rgba(15,32,68,0.2)}
+.approved-stamp{display:none;font-size:11px;font-weight:700;color:#0a6647;padding:5px 0;margin-top:4px}
+.panel{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.audit-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:0.5px solid rgba(15,32,68,0.08)}
+.audit-row:last-child{border-bottom:none}
+.audit-time{font-size:10.5px;color:#5f6b80;width:70px;flex-shrink:0;font-family:ui-monospace,Menlo,monospace}
+.audit-layer{font-size:9.5px;font-weight:700;padding:2px 5px;border-radius:3px;background:rgba(15,32,68,0.07);color:#5f6b80;flex-shrink:0}
+.audit-action{color:#0f2044;flex:1;line-height:1.45;font-size:11.5px}
+.audit-who{font-size:10px;color:#5f6b80;flex-shrink:0;text-align:right}
+.policy-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid rgba(15,32,68,0.08)}
+.policy-row:last-child{border-bottom:none}
+.policy-name{font-size:12px;font-weight:600;color:#0f2044;flex:1}
+.policy-ver{font-size:11px;color:#5f6b80}
+.policy-status{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.ps-live{background:#e1f5ee;color:#0a6647}.ps-pending{background:#fff3e0;color:#8a5000}
+.assure{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:12px 14px;background:#fffbef;border:0.5px solid #d9a93f;border-radius:9px}
+.assure-text{font-size:11.5px;color:#6e4400;line-height:1.6}
+.footer{text-align:center;padding:26px 16px 8px}
+.footer p{font-size:11px;color:#8a96ab;line-height:1.7}
+.footer strong{color:#3a5a9a}
+.nav-strip{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#fff;border-top:0.5px solid rgba(15,32,68,0.1)}
+.nav-link{font-size:11.5px;font-weight:600;color:#3a5a9a;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="hd">
+  <div><span class="badge gold">Layer 11 of 11</span><span class="badge blue">Human governance — not AI</span></div>
+  <div class="hd-title">Governance &amp; Audit</div>
+  <div class="hd-sub">Everything the AI has escalated — awaiting the Privacy Officer's decision · PrivacyCo dummy data</div>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="tabGov" onclick="setView('gov')">DPO action queue</button>
+    <button class="toggle-btn" id="tabAudit" onclick="setView('audit')">Audit trail</button>
+    <button class="toggle-btn" id="tabPolicy" onclick="setView('policy')">Policies</button>
+  </div>
+</div>
+
+<div class="view active" id="viewGov">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-val" style="color:#791f1f">6</div><div class="kpi-label">decisions awaiting the Privacy Officer right now</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:#791f1f">2</div><div class="kpi-label">regulatory notifications overdue — OAIC and ICO</div></div>
+    <div class="kpi"><div class="kpi-val">0</div><div class="kpi-label">autonomous actions taken — AI escalated, humans decide</div></div>
+    <div class="kpi"><div class="kpi-val">100%</div><div class="kpi-label">of escalations with evidence package attached</div></div>
+  </div>
+  <div class="human-banner">
+    <div class="hb-icon">&#128100;</div>
+    <div class="hb-title">This layer belongs to the Privacy Officer</div>
+    <div class="hb-desc">The AI agents have done their work — discovered, classified, monitored, and drafted. Everything below is a human decision. The AI does not act until you approve.</div>
+  </div>
+  <div class="sec">Action queue — tap to approve or review</div>
+  <div class="action-card crit" id="ac1">
+    <div class="ac-head"><span class="ac-tag t-crit">CRITICAL</span><span class="ac-name">Authorise OAIC breach notification</span><span class="ac-deadline d-red">OVERDUE</span></div>
+    <div class="ac-body">INC-001: health data + Hotjar violation. Draft prepared by Layer 9. Every hour of delay increases regulatory exposure. Evidence: RSK-001, RSK-002, DPIA-001.</div>
+    <div class="ac-btns"><button class="ac-btn btn-approve" onclick="approve('ac1','Authorised OAIC notification')">Authorise &amp; send</button><button class="ac-btn btn-review" onclick="reviewAc('ac1')">Request legal review</button><button class="ac-btn btn-view">View draft</button></div>
+    <div class="approved-stamp" id="stamp-ac1"></div>
+  </div>
+  <div class="action-card crit" id="ac2">
+    <div class="ac-head"><span class="ac-tag t-crit">CRITICAL</span><span class="ac-name">Authorise ICO breach notification (UK GDPR)</span><span class="ac-deadline d-red">OVERDUE</span></div>
+    <div class="ac-body">Same incident — INC-001. UK GDPR Art. 33 requires 72-hour notification. ICO has enforcement powers including fines up to £17.5M or 4% global turnover.</div>
+    <div class="ac-btns"><button class="ac-btn btn-approve" onclick="approve('ac2','Authorised ICO notification')">Authorise &amp; send</button><button class="ac-btn btn-review" onclick="reviewAc('ac2')">Request legal review</button><button class="ac-btn btn-view">View draft</button></div>
+    <div class="approved-stamp" id="stamp-ac2"></div>
+  </div>
+  <div class="action-card crit" id="ac3">
+    <div class="ac-head"><span class="ac-tag t-crit">CRITICAL</span><span class="ac-name">Approve DSR-009 response — Tom Wallace</span><span class="ac-deadline d-red">4 days</span></div>
+    <div class="ac-body">Access request received 17 May. Deadline 16 Jun. Agent has assembled the full data package — 2 systems, 8 data fields. Must be sent by 16 Jun or PrivacyCo is in statutory breach.</div>
+    <div class="ac-btns"><button class="ac-btn btn-approve" onclick="approve('ac3','Approved DSR-009 response package')">Approve &amp; send</button><button class="ac-btn btn-review" onclick="reviewAc('ac3')">Review data package</button></div>
+    <div class="approved-stamp" id="stamp-ac3"></div>
+  </div>
+  <div class="action-card high" id="ac4">
+    <div class="ac-head"><span class="ac-tag t-high">HIGH</span><span class="ac-name">Approve deletion — health_condition field (CRM)</span><span class="ac-deadline d-amber">This week</span></div>
+    <div class="ac-body">Layer 7 flagged for disposal. Layer 10 DPIA confirms no lawful basis. Agent cannot delete — irreversible action. DPO approval required. Affects 4 customer records.</div>
+    <div class="ac-btns"><button class="ac-btn btn-approve" onclick="approve('ac4','Approved deletion of health_condition field')">Approve deletion</button><button class="ac-btn btn-view">View DPIA-001</button></div>
+    <div class="approved-stamp" id="stamp-ac4"></div>
+  </div>
+  <div class="action-card high" id="ac5">
+    <div class="ac-head"><span class="ac-tag t-high">HIGH</span><span class="ac-name">Approve disposal — Passport_Scan_EMP-005</span><span class="ac-deadline d-amber">This week</span></div>
+    <div class="ac-body">Yuki Tanaka's passport scan. 7 years 2 months past retention limit. Agent cannot delete — irreversible. HR and DPO sign-off required.</div>
+    <div class="ac-btns"><button class="ac-btn btn-approve" onclick="approve('ac5','Approved disposal of Passport_Scan_EMP-005')">Approve disposal</button><button class="ac-btn btn-review" onclick="reviewAc('ac5')">Verify with HR first</button></div>
+    <div class="approved-stamp" id="stamp-ac5"></div>
+  </div>
+  <div class="action-card med" id="ac6">
+    <div class="ac-head"><span class="ac-tag t-med">MEDIUM</span><span class="ac-name">Approve Privacy Notice v4 for publication</span><span class="ac-deadline d-green">7 days</span></div>
+    <div class="ac-body">Layer 5 drafted v4 — 6 changes covering health data disclosure, Meta Pixel, Hotjar, and retention updates. Agent cannot publish. DPO approves and platform publishes automatically.</div>
+    <div class="ac-btns"><button class="ac-btn btn-approve" onclick="approve('ac6','Approved Privacy Notice v4 for publication')">Approve &amp; publish</button><button class="ac-btn btn-review" onclick="reviewAc('ac6')">Request legal review</button><button class="ac-btn btn-view">View v4 draft</button></div>
+    <div class="approved-stamp" id="stamp-ac6"></div>
+  </div>
+  <div class="assure"><span style="font-size:14px;flex-shrink:0">&#9878;&#65039;</span><div class="assure-text">Every approval is time-stamped, attributed to the approving officer, and added to the immutable audit trail. If a regulator asks "who decided this and when" — Layer 11 has the answer.</div></div>
+</div>
+
+<div class="view" id="viewAudit">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-val">47</div><div class="kpi-label">audit log entries since scan commenced</div></div>
+    <div class="kpi"><div class="kpi-val">11</div><div class="kpi-label">layers that contributed entries</div></div>
+    <div class="kpi"><div class="kpi-val">0</div><div class="kpi-label">entries modified or deleted — immutable log</div></div>
+    <div class="kpi"><div class="kpi-val">100%</div><div class="kpi-label">of agent actions attributed and timestamped</div></div>
+  </div>
+  <div class="sec">Recent audit entries — sample</div>
+  <div class="panel">
+    <div class="audit-row"><div class="audit-time">12 Jun 09:14</div><span class="audit-layer">L9</span><div class="audit-action">INC-001 notifiability assessed — NDB and GDPR thresholds met · drafts prepared</div><div class="audit-who">Breach Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 09:08</div><span class="audit-layer">L8</span><div class="audit-action">RSK-001 (9.2) and RSK-002 (8.8) escalated to DPO with evidence packages</div><div class="audit-who">Risk Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 08:55</div><span class="audit-layer">L7</span><div class="audit-action">Passport_Scan_EMP-005 flagged overdue · legal hold applied to CRM-007</div><div class="audit-who">Retention Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 08:41</div><span class="audit-layer">L6</span><div class="audit-action">DSR-009 priority escalation sent · 4 days to deadline · combined risk file created</div><div class="audit-who">DSR Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 08:30</div><span class="audit-layer">L5</span><div class="audit-action">Privacy Notice v4 drafted · 3 triggers · 6 changes · sent for DPO approval</div><div class="audit-who">Notice Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 08:17</div><span class="audit-layer">L4</span><div class="audit-action">3 trackers blocked · Hotjar/CRM-009 priority escalation · 2 banner failures queued</div><div class="audit-who">Tracking Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 08:04</div><span class="audit-layer">L3</span><div class="audit-action">Campaign JUN-NL-01: 4 blocked · CRM-009 drift corrected · health data no-basis confirmed</div><div class="audit-who">Consent Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 07:52</div><span class="audit-layer">L2</span><div class="audit-action">39 items classified · 36 auto-labelled · 3 to human review · jurisdiction tags applied</div><div class="audit-who">Classification Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 07:38</div><span class="audit-layer">L1</span><div class="audit-action">Scan complete · 4 systems · 49 items · 2 critical findings · MCP session closed</div><div class="audit-who">Discovery Agent</div></div>
+    <div class="audit-row"><div class="audit-time">12 Jun 07:37</div><span class="audit-layer">L1</span><div class="audit-action">Guardrail: scope locked · field names only · no raw values retained</div><div class="audit-who">Discovery Agent</div></div>
+  </div>
+  <div class="assure" style="background:#eef8f4;border-color:#9dd4be"><span style="font-size:14px;flex-shrink:0">&#128274;</span><div class="assure-text" style="color:#085041">The audit log is append-only and tamper-evident. Every entry records: timestamp, layer, agent or human actor, action taken, and data referenced. This is the evidence base for any regulatory investigation.</div></div>
+</div>
+
+<div class="view" id="viewPolicy">
+  <div class="sec">Approved policies — governing agent behaviour</div>
+  <div class="panel">
+    <div class="policy-row"><div class="policy-name">Classification rules</div><div class="policy-ver">v2.1 · approved 01 Mar 2026</div><span class="policy-status ps-live">LIVE</span></div>
+    <div class="policy-row"><div class="policy-name">Consent management rules</div><div class="policy-ver">v1.4 · approved 15 Jan 2026</div><span class="policy-status ps-live">LIVE</span></div>
+    <div class="policy-row"><div class="policy-name">Cookie enforcement rules</div><div class="policy-ver">v1.2 · approved 10 Feb 2026</div><span class="policy-status ps-live">LIVE</span></div>
+    <div class="policy-row"><div class="policy-name">Retention schedules</div><div class="policy-ver">v3.0 · approved 20 Nov 2025</div><span class="policy-status ps-live">LIVE</span></div>
+    <div class="policy-row"><div class="policy-name">DSR fulfilment rules</div><div class="policy-ver">v2.0 · approved 01 Jun 2025</div><span class="policy-status ps-live">LIVE</span></div>
+    <div class="policy-row"><div class="policy-name">Breach notification thresholds</div><div class="policy-ver">v1.1 · approved 15 Mar 2026</div><span class="policy-status ps-live">LIVE</span></div>
+    <div class="policy-row"><div class="policy-name">Risk scoring model</div><div class="policy-ver">v1.0 · approved 01 Jun 2026</div><span class="policy-status ps-live">LIVE</span></div>
+    <div class="policy-row"><div class="policy-name">Privacy Notice v4</div><div class="policy-ver">Draft · awaiting DPO approval</div><span class="policy-status ps-pending">PENDING</span></div>
+    <div class="policy-row"><div class="policy-name">DPIA-001 (health data CRM)</div><div class="policy-ver">Draft · awaiting DPO approval</div><span class="policy-status ps-pending">PENDING</span></div>
+  </div>
+  <div class="assure"><span style="font-size:14px;flex-shrink:0">&#9878;&#65039;</span><div class="assure-text">Every agent in Layers 1–10 operates under a policy approved at this layer. If the DPO changes a policy, all agents update immediately. This is the control point that makes AI-native privacy governance safe.</div></div>
+</div>
+
+<div class="footer"><p><strong>Layer 11 of 11 — AI-Native Privacy Management Platform</strong><br>Using AI Agents in Privacy Operations with Governance Guardrails · Powered by MCP Protocol<br>PrivacyCo is a fictional company. All data is dummy data.</p></div>
+<div class="nav-strip"><a class="nav-link" href="platform-layer10-assessments.html">&#8592; Layer 10</a><a class="nav-link" href="index.html">&#8962; Architecture</a></div>
+</div>
+<script>
+function setView(v){['gov','audit','policy'].forEach(function(id){document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1)).className='view';document.getElementById('tab'+id.charAt(0).toUpperCase()+id.slice(1)).className='toggle-btn'});document.getElementById('view'+v.charAt(0).toUpperCase()+v.slice(1)).className='view active';document.getElementById('tab'+v.charAt(0).toUpperCase()+v.slice(1)).className='toggle-btn active'}
+function approve(id,action){var card=document.getElementById(id);var stamp=document.getElementById('stamp-'+id);var now=new Date();var t=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');var classes=card.className;card.className=classes.replace('crit','done').replace('high','done').replace('med','done');card.querySelectorAll('.ac-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.4'});stamp.textContent='✓ Approved by DPO at '+t+' · logged to audit trail';stamp.style.display='block'}
+function reviewAc(id){var stamp=document.getElementById('stamp-'+id);var now=new Date();var t=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');stamp.textContent='⏳ Sent for review at '+t+' · awaiting response';stamp.style.display='block';stamp.style.color='#8a5000'}
+</script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer 3 — Consent Management | PrivacyCo AI Platform</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.page{max-width:520px;margin:0 auto;padding-bottom:40px}
+.hd{background:#0f2044;padding:22px 18px 16px}
+.badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px}
+.badge.green{background:rgba(29,143,110,0.25);color:#5dcaa5;border:0.5px solid rgba(93,202,165,0.3)}
+.badge.blue{background:rgba(59,125,216,0.2);color:#7ab0e8;border:0.5px solid rgba(59,125,216,0.3)}
+.hd-title{font-size:18px;font-weight:600;color:#fff;margin-top:8px}
+.hd-sub{font-size:12px;color:#9aaac8;margin-top:4px;line-height:1.5}
+.toggle-wrap{display:flex;gap:6px;background:rgba(255,255,255,0.08);border-radius:9px;padding:4px;margin-top:14px}
+.toggle-btn{flex:1;border:none;border-radius:6px;padding:9px 10px;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#9aaac8}
+.toggle-btn.active{background:#fff;color:#0f2044}
+.view{display:none;padding:16px}
+.view.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kpi{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:9px;padding:13px 14px}
+.kpi-val{font-size:24px;font-weight:600;color:#0f2044;line-height:1}
+.kpi-label{font-size:11px;color:#5f6b80;margin-top:5px;line-height:1.4}
+.sec{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#8a96ab;padding:18px 0 8px}
+.panel{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.purpose{padding:9px 0;border-bottom:0.5px solid rgba(15,32,68,0.08)}
+.purpose:last-child{border-bottom:none}
+.purpose-head{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.purpose-name{font-size:12.5px;font-weight:600;color:#0f2044}
+.purpose-n{margin-left:auto;font-size:11px;color:#5f6b80}
+.consent-bar{display:flex;height:18px;border-radius:5px;overflow:hidden}
+.cb-seg{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff;min-width:18px}
+.cb-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.cb-key{display:flex;align-items:center;gap:5px;font-size:10px;color:#5f6b80}
+.cb-dot{width:8px;height:8px;border-radius:2px}
+.hero{background:#eef4fd;border:0.5px solid #6f9fd8;border-radius:10px;padding:13px 14px}
+.hero-title{font-size:13px;font-weight:600;color:#1a3a6e;margin-bottom:7px}
+.hero-body{font-size:12px;color:#1f3354;line-height:1.6;margin-bottom:9px}
+.block-row{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-top:0.5px solid rgba(40,80,150,0.15);font-size:11.5px;color:#1f3354;line-height:1.5}
+.block-tag{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0;margin-top:1px}
+.tag-block{background:#fcebeb;color:#791f1f}
+.tag-allow{background:#e1f5ee;color:#0a6647}
+.drift-card{background:#fdf6e9;border:0.5px solid #d9a93f;border-radius:10px;padding:13px 14px}
+.drift-title{font-size:13px;font-weight:600;color:#6e4e00;margin-bottom:7px}
+.drift-item{font-size:12px;color:#54400a;line-height:1.6;padding:6px 0;border-top:0.5px solid rgba(160,112,32,0.2)}
+.drift-item:first-of-type{border-top:none;padding-top:0}
+.nobasis{background:#fcebeb;border:0.5px solid #e24b4a;border-radius:10px;padding:13px 14px}
+.nb-title{font-size:13px;font-weight:600;color:#791f1f;margin-bottom:6px}
+.nb-body{font-size:12px;color:#501313;line-height:1.6}
+.assure{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:12px 14px;background:#eef8f4;border:0.5px solid #9dd4be;border-radius:9px}
+.assure-text{font-size:11.5px;color:#085041;line-height:1.6}
+.agent-status{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;padding:13px 14px}
+.status-row{display:flex;align-items:flex-start;gap:10px}
+.status-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px;background:#b4b2a9}
+.status-dot.running{background:#1d9e75;animation:pulse 1.2s infinite}
+.status-dot.done{background:#1d9e75}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.status-label{font-size:13px;font-weight:600;color:#0f2044}
+.status-detail{font-size:11px;color:#5f6b80;margin-top:3px;line-height:1.5}
+.metrics-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.metric{background:#fff;border:0.5px solid rgba(15,32,68,0.1);border-radius:8px;padding:10px 12px}
+.metric-label{font-size:10px;color:#8a96ab;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:600;color:#0f2044;line-height:1}
+.metric-sub{font-size:10.5px;color:#8a96ab;margin-top:3px}
+.cust-wrap{border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;overflow:hidden}
+.cust-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:0.5px solid rgba(15,32,68,0.07);font-size:11.5px;background:#fff}
+.cust-item:last-child{border-bottom:none}
+.cust-id{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#0f2044;width:64px;flex-shrink:0}
+.cust-reason{font-size:10.5px;color:#5f6b80;flex:1;min-width:0;line-height:1.4}
+.feed-wrap{border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;overflow:hidden;background:#fff}
+.feed-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:0.5px solid rgba(15,32,68,0.07);font-size:12px}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.feed-dot.ok{background:#1d9e75}.feed-dot.warn{background:#e8b44a}.feed-dot.info{background:#3b7dd8}.feed-dot.guard{background:#7f77dd}.feed-dot.block{background:#e24b4a}
+.feed-text{flex:1;color:#1a2a44;line-height:1.45}
+.feed-meta{font-size:10.5px;color:#8a96ab;margin-top:1px}
+.empty{padding:18px;text-align:center;color:#8a96ab;font-size:12px;background:#fff;border-radius:10px;border:0.5px solid rgba(15,32,68,0.1)}
+.output-card{display:none;border:0.5px solid rgba(15,32,68,0.1);border-radius:10px;background:#fff;padding:12px 14px;margin-top:8px}
+.output-card.show{display:block}
+.output-row{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:#1a2a44;padding:4px 0}
+.output-path{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#8a96ab}
+.controls{padding:14px 0 0;display:flex;gap:8px}
+.btn-primary{background:#0f2044;color:#fff;border:none;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;flex:1}
+.btn-primary:disabled{opacity:0.4;cursor:default}
+.btn-secondary{background:#fff;color:#0f2044;border:0.5px solid rgba(15,32,68,0.3);border-radius:8px;padding:12px 14px;font-size:13px;cursor:pointer}
+.btn-secondary:disabled{opacity:0.4;cursor:default}
+.guard-strip{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 13px;background:#f1f0fc;border:0.5px solid #c5c0ee;border-radius:8px}
+.guard-text{font-size:11.5px;color:#3c3489;line-height:1.5}
+.footer{text-align:center;padding:26px 16px 8px}
+.footer p{font-size:11px;color:#8a96ab;line-height:1.7}
+.footer strong{color:#3a5a9a}
+.nav-strip{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#fff;border-top:0.5px solid rgba(15,32,68,0.1)}
+.nav-link{font-size:11.5px;font-weight:600;color:#3a5a9a;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="hd">
+  <div><span class="badge green">Layer 3 of 11</span><span class="badge blue">Input: labelled inventory from Layer 2</span></div>
+  <div class="hd-title">Consent Management</div>
+  <div class="hd-sub">Who has said yes to what — and are we honouring it · PrivacyCo dummy data</div>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="tabBiz" onclick="setView('biz')">Executive view</button>
+    <button class="toggle-btn" id="tabTech" onclick="setView('tech')">Technical run</button>
+  </div>
+</div>
+
+<div class="view active" id="viewBiz">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-val">10</div><div class="kpi-label">customers with consent tracked across 3 purposes</div></div>
+    <div class="kpi"><div class="kpi-val">4</div><div class="kpi-label">non-consented sends blocked before they happened</div></div>
+    <div class="kpi"><div class="kpi-val">2</div><div class="kpi-label">consent drift issues detected and corrected</div></div>
+    <div class="kpi"><div class="kpi-val">100%</div><div class="kpi-label">of revocations honoured automatically same day</div></div>
+  </div>
+  <div class="sec">The consent picture — 10 customers, 3 purposes</div>
+  <div class="panel">
+    <div class="purpose">
+      <div class="purpose-head"><span class="purpose-name">Marketing emails</span><span class="purpose-n">6 of 10 may be contacted</span></div>
+      <div class="consent-bar"><div class="cb-seg" style="width:60%;background:#1d9e75">6</div><div class="cb-seg" style="width:10%;background:#cd4543">1</div><div class="cb-seg" style="width:10%;background:#d99a2b">1</div><div class="cb-seg" style="width:20%;background:#b4b2a9">2</div></div>
+    </div>
+    <div class="purpose">
+      <div class="purpose-head"><span class="purpose-name">Analytics &amp; product improvement</span><span class="purpose-n">8 of 10</span></div>
+      <div class="consent-bar"><div class="cb-seg" style="width:80%;background:#1d9e75">8</div><div class="cb-seg" style="width:20%;background:#b4b2a9">2</div></div>
+    </div>
+    <div class="purpose">
+      <div class="purpose-head"><span class="purpose-name">Sharing with partners</span><span class="purpose-n">3 of 10</span></div>
+      <div class="consent-bar"><div class="cb-seg" style="width:30%;background:#1d9e75">3</div><div class="cb-seg" style="width:70%;background:#b4b2a9">7</div></div>
+    </div>
+    <div class="cb-legend">
+      <span class="cb-key"><span class="cb-dot" style="background:#1d9e75"></span>Valid consent</span>
+      <span class="cb-key"><span class="cb-dot" style="background:#cd4543"></span>Revoked</span>
+      <span class="cb-key"><span class="cb-dot" style="background:#d99a2b"></span>Expired</span>
+      <span class="cb-key"><span class="cb-dot" style="background:#b4b2a9"></span>Never given</span>
+    </div>
+  </div>
+  <div class="sec">The moment that matters — enforcement in action</div>
+  <div class="hero">
+    <div class="hero-title">Marketing asked to email all 10 customers. The agent said: 6 yes, 4 no.</div>
+    <div class="hero-body">Before a single email left the building, the agent checked every recipient against the consent ledger:</div>
+    <div class="block-row"><span class="block-tag tag-allow">SENT</span><div>6 customers with valid, current marketing consent</div></div>
+    <div class="block-row"><span class="block-tag tag-block">BLOCKED</span><div><strong>Tom Wallace (CRM-009)</strong> — revoked consent on 18 May, same day he lodged his complaint</div></div>
+    <div class="block-row"><span class="block-tag tag-block">BLOCKED</span><div><strong>CRM-004</strong> — consent has expired under the 24-month refresh policy</div></div>
+    <div class="block-row"><span class="block-tag tag-block">BLOCKED</span><div><strong>CRM-007, CRM-010</strong> — never gave marketing consent</div></div>
+  </div>
+  <div class="sec">Drift — where records and reality disagreed</div>
+  <div class="drift-card">
+    <div class="drift-title">&#128260; 2 issues found and fixed</div>
+    <div class="drift-item"><strong>Tom Wallace still on the campaign mailing list</strong> 25 days after revoking — the agent removed him automatically. Suppression is protective, so policy allows it.</div>
+    <div class="drift-item"><strong>CRM-004 consent passed its 24-month expiry</strong> without a refresh request being sent — the agent suppressed contact and queued a re-consent invitation for approval.</div>
+  </div>
+  <div class="sec">Where no consent exists at all</div>
+  <div class="nobasis">
+    <div class="nb-title">&#9888;&#65039; The health data has no lawful basis — confirmed</div>
+    <div class="nb-body">The consent ledger holds no record of any customer agreeing to health information being collected. This independently confirms Layer 1 Finding 1: health conditions of 4 customers are held without consent or any other lawful basis. The DPO escalation now carries consent-ledger evidence.</div>
+  </div>
+  <div class="assure"><span style="font-size:14px;flex-shrink:0">&#128737;&#65039;</span><div class="assure-text">Every consent record is timestamped against the privacy notice version in force when it was given. Protective actions (suppression) run automatically under pre-approved policy. Anything destructive still requires human approval.</div></div>
+</div>
+
+<div class="view" id="viewTech">
+  <div class="agent-status">
+    <div class="status-row"><div class="status-dot" id="agentDot"></div><div><div class="status-label" id="agentLabel">Consent agent — ready</div><div class="status-detail" id="agentDetail">Ledger: 10 customers x 3 purposes · Policy: consent_rules_v1.4 (24-month refresh)</div></div></div>
+  </div>
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Evaluated</div><div class="metric-val" id="mEval">0</div><div class="metric-sub">of 10 recipients</div></div>
+    <div class="metric"><div class="metric-label">Allowed</div><div class="metric-val" id="mAllow">0</div><div class="metric-sub">valid consent</div></div>
+    <div class="metric"><div class="metric-label">Blocked</div><div class="metric-val" id="mBlock">0</div><div class="metric-sub">no valid consent</div></div>
+    <div class="metric"><div class="metric-label">Drift fixed</div><div class="metric-val" id="mDrift">0</div><div class="metric-sub">ledger vs reality</div></div>
+  </div>
+  <div class="sec">Campaign: June newsletter — all customers</div>
+  <div id="custWrap"><div class="empty" id="emptyCust">Press Run enforcement to evaluate the campaign</div></div>
+  <div class="sec">Agent activity log</div>
+  <div id="feedWrap"><div class="empty" id="emptyFeed">Agent log will appear here</div></div>
+  <div class="output-card" id="outputCard">
+    <div class="output-row"><span>&#9989;</span><div>Consent register updated<div class="output-path">02_Data_Map/consent_register_2026-06-12.csv</div></div></div>
+    <div class="output-row"><span>&#128231;</span><div>Suppression list issued to marketing — 4 customers<div class="output-path">Campaign JUN-NL-01</div></div></div>
+    <div class="output-row"><span>&#128203;</span><div>Audit trail written<div class="output-path">06_Audit_Log/agent_audit_log_scenario3.csv</div></div></div>
+  </div>
+  <div class="guard-strip"><span style="font-size:13px;flex-shrink:0">&#128274;</span><div class="guard-text">Protective actions auto-run under pre-approved policy · destructive actions escalate to Layer 11 · every decision carries the notice version and timestamp it relied on</div></div>
+  <div class="controls">
+    <button class="btn-primary" id="btnRun" onclick="runConsent()">Run enforcement</button>
+    <button class="btn-secondary" id="btnReset" onclick="resetConsent()" disabled>Reset</button>
+  </div>
+</div>
+
+<div class="footer"><p><strong>Layer 3 of 11 — AI-Native Privacy Management Platform</strong><br>Using AI Agents in Privacy Operations with Governance Guardrails · Powered by MCP Protocol<br>PrivacyCo is a fictional company. All data is dummy data.</p></div>
+<div class="nav-strip"><a class="nav-link" href="platform-layer2-classification.html">&#8592; Layer 2</a><a class="nav-link" href="platform-layer4-cookie-tracking.html">Layer 4 &#8594;</a></div>
+</div>
+<script>
+function setView(v){document.getElementById('viewBiz').className=v==='biz'?'view active':'view';document.getElementById('viewTech').className=v==='tech'?'view active':'view';document.getElementById('tabBiz').className=v==='biz'?'toggle-btn active':'toggle-btn';document.getElementById('tabTech').className=v==='tech'?'toggle-btn active':'toggle-btn'}
+var customers=[{id:'CRM-001',allow:true,reason:'Valid consent · given 12 Mar 2025 · notice v2'},{id:'CRM-002',allow:true,reason:'Valid consent · given 04 Aug 2025 · notice v3'},{id:'CRM-003',allow:true,reason:'Valid consent · given 22 Jan 2026 · notice v3'},{id:'CRM-004',allow:false,reason:'EXPIRED · consent given 02 May 2024 · exceeds 24-month policy'},{id:'CRM-005',allow:true,reason:'Valid consent · given 17 Nov 2025 · notice v3'},{id:'CRM-006',allow:true,reason:'Valid consent · given 09 Feb 2026 · notice v3'},{id:'CRM-007',allow:false,reason:'NEVER GIVEN · no marketing consent on record'},{id:'CRM-008',allow:true,reason:'Valid consent · given 30 Apr 2026 · notice v3'},{id:'CRM-009',allow:false,reason:'REVOKED · Tom Wallace withdrew consent 18 May 2026'},{id:'CRM-010',allow:false,reason:'NEVER GIVEN · no marketing consent on record'}];
+var running=false;
+function delay(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function setN(id,v){document.getElementById(id).textContent=v}
+function setAgent(l,d,s){document.getElementById('agentLabel').textContent=l;document.getElementById('agentDetail').textContent=d;document.getElementById('agentDot').className='status-dot '+s}
+function addCust(c){var w=document.getElementById('custWrap');var e=document.getElementById('emptyCust');if(e)e.remove();if(!w.querySelector('.cust-wrap')){var d=document.createElement('div');d.className='cust-wrap';w.appendChild(d)}var list=w.querySelector('.cust-wrap');var el=document.createElement('div');el.className='cust-item';el.innerHTML='<div class="cust-id">'+c.id+'</div><span style="font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;'+(c.allow?'background:#e1f5ee;color:#0a6647':'background:#fcebeb;color:#791f1f')+'">'+(c.allow?'ALLOW':'BLOCK')+'</span><div class="cust-reason">'+c.reason+'</div>';list.appendChild(el)}
+function addLog(type,text,meta){var w=document.getElementById('feedWrap');var e=document.getElementById('emptyFeed');if(e)e.remove();if(!w.querySelector('.feed-wrap')){var d=document.createElement('div');d.className='feed-wrap';w.appendChild(d)}var list=w.querySelector('.feed-wrap');var el=document.createElement('div');el.className='feed-item';el.innerHTML='<div class="feed-dot '+type+'"></div><div class="feed-text">'+text+'<div class="feed-meta">'+(meta||'')+'</div></div>';list.appendChild(el)}
+async function runConsent(){if(running)return;running=true;document.getElementById('btnRun').disabled=true;document.getElementById('btnReset').disabled=true;setAgent('Consent agent — initialising','Loading consent_rules_v1.4 and consent ledger…','running');addLog('info','Campaign request received: JUN-NL-01','Marketing requests send to all 10 customers');await delay(700);addLog('guard','Enforcement gate engaged','No send proceeds without per-recipient consent validation');await delay(600);setAgent('Evaluating recipients','Checking each customer against ledger…','running');var ev=0,al=0,bl=0;for(var i=0;i<customers.length;i++){var c=customers[i];addCust(c);ev++;if(c.allow)al++;else bl++;setN('mEval',ev);setN('mAllow',al);setN('mBlock',bl);if(!c.allow){addLog('block','Blocked '+c.id,c.reason)}await delay(380)}await delay(400);addLog('ok','Suppression list issued — 4 customers excluded','Campaign may proceed to 6 validated recipients only');await delay(600);setAgent('Drift scan','Comparing ledger against live marketing platform state…','running');addLog('warn','Drift: CRM-009 still on mailing list 25 days after revocation','Auto-removed — suppression is protective, pre-approved under policy v1.4');setN('mDrift',1);await delay(700);addLog('warn','Drift: CRM-004 consent expired with no refresh sent','Contact suppressed · re-consent invitation queued for approval');setN('mDrift',2);await delay(700);addLog('block','Lawful basis check: health data — NO consent record exists','Independently confirms Finding 1 · evidence attached to DPO escalation');await delay(600);addLog('info','Consent register + suppression list + audit log saved');document.getElementById('outputCard').className='output-card show';await delay(400);setAgent('Enforcement complete','10 evaluated · 6 allowed · 4 blocked · 2 drift issues corrected · health data no-basis confirmed','done');addLog('ok','Handoff','Consent states now enforce downstream: Layer 4 (tracking), Layer 6 (DSR), Layer 7 (retention)');document.getElementById('btnReset').disabled=false;running=false}
+function resetConsent(){running=false;['mEval','mAllow','mBlock','mDrift'].forEach(function(id){setN(id,0)});setAgent('Consent agent — ready','Ledger: 10 customers x 3 purposes · Policy: consent_rules_v1.4','');document.getElementById('custWrap').innerHTML='<div class="empty" id="emptyCust">Press Run enforcement to evaluate the campaign</div>';document.getElementById('feedWrap').innerHTML='<div class="empty" id="emptyFeed">Agent log will appear here</div>';document.getElementById('outputCard').className='output-card';document.getElementById('btnRun').disabled=false;document.getElementById('btnReset').disabled=true}
+</script>
+</body>
+</html>
