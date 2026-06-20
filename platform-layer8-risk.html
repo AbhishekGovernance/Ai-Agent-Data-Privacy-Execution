@@ -88,6 +88,15 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .footer strong{color:#3a5a9a}
 .nav-strip{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#fff;border-top:0.5px solid rgba(15,32,68,0.1)}
 .nav-link{font-size:11.5px;font-weight:600;color:#3a5a9a;text-decoration:none}
+
+.nav-strip-v2{display:flex;align-items:stretch;border-top:0.5px solid rgba(15,32,68,0.12);background:#fff;position:sticky;bottom:0;box-shadow:0 -2px 10px rgba(15,32,68,0.06)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;text-decoration:none;color:#0f2044;font-size:11px;font-weight:600;gap:2px;transition:background 0.1s}
+.nav-btn:hover{background:#f0f4fc}
+.nav-btn.disabled{color:#c4cbd6;pointer-events:none}
+.nav-btn-arrow{font-size:15px;line-height:1}
+.nav-btn-label{font-size:9.5px;color:#8a96ab;font-weight:500}
+.nav-btn-mid{border-left:0.5px solid rgba(15,32,68,0.1);border-right:0.5px solid rgba(15,32,68,0.1);max-width:70px}
+.nav-btn-mid .nav-btn-arrow{font-size:17px}
 </style>
 </head>
 <body>
@@ -177,7 +186,7 @@ body{background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
   </div>
 </div>
 <div class="footer"><p><strong>Layer 8 of 11 — AI-Native Privacy Management Platform</strong><br>Using AI Agents in Privacy Operations with Governance Guardrails · Powered by MCP Protocol<br>PrivacyCo is a fictional company. All data is dummy data.</p></div>
-<div class="nav-strip"><a class="nav-link" href="platform-layer7-retention.html">&#8592; Layer 7</a><a class="nav-link" href="platform-layer9-breach.html">Layer 9 &#8594;</a></div>
+<div class="nav-strip-v2"><a class="nav-btn" href="platform-layer7-retention.html"><span class="nav-btn-arrow">&#8592;</span><span class="nav-btn-label">Layer 7 &middot; Retention</span></a><a class="nav-btn nav-btn-mid" href="index.html"><span class="nav-btn-arrow">&#8962;</span><span class="nav-btn-label">Hub</span></a><a class="nav-btn" href="platform-layer9-breach.html"><span class="nav-btn-arrow">&#8594;</span><span class="nav-btn-label">Layer 9 &middot; Breach</span></a></div>
 </div>
 <script>
 function setView(v){document.getElementById('viewBiz').className=v==='biz'?'view active':'view';document.getElementById('viewTech').className=v==='tech'?'view active':'view';document.getElementById('tabBiz').className=v==='biz'?'toggle-btn active':'toggle-btn';document.getElementById('tabTech').className=v==='tech'?'toggle-btn active':'toggle-btn'}
